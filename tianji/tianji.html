@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>天机阁 · 情报与推演</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06060c;--bg2:#0c0c18;--bg3:#14142a;--card:rgba(18,18,36,.9);--red:#ff2e63;--cyan:#08f7fe;--gold:#ffd700;--purple:#9d4edd;--green:#39ff14;--amber:#ff8c00;--text:#e8e8f0;--dim:#555570;--sub:#8888a8;--border:rgba(255,255,255,.06);--font-d:'Orbitron',monospace;--font-b:'Noto Sans SC',sans-serif;--font-c:'Ma Shan Zheng',cursive}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.bg-grid{position:fixed;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,transparent,transparent 49px,rgba(255,215,0,.02) 50px),repeating-linear-gradient(90deg,transparent,transparent 49px,rgba(255,215,0,.02) 50px);pointer-events:none;z-index:0}
+
+/* Header */
+.header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:rgba(6,6,12,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,215,0,.08)}
+.logo{font-family:var(--font-c);font-size:28px;background:linear-gradient(135deg,var(--gold),var(--amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none}
+.nav-tabs{display:flex;gap:4px}
+.nav-tab{padding:10px 22px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--sub);font-family:var(--font-b);font-size:14px;cursor:pointer;transition:.3s;font-weight:500}
+.nav-tab:hover{border-color:var(--gold);color:var(--text)}
+.nav-tab.active{background:linear-gradient(135deg,rgba(255,215,0,.1),rgba(255,140,0,.08));border-color:var(--gold);color:var(--gold);font-weight:700}
+.status{font-family:var(--font-d);font-size:9px;color:var(--green);letter-spacing:2px;display:flex;align-items:center;gap:5px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.page{display:none;padding:20px 24px;position:relative;z-index:1;max-width:1200px;margin:0 auto}
+.page.active{display:block}
+
+/* 情报站 */
+.subject-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.sub-tab{padding:12px 18px;border:1px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;transition:.3s;flex:1;min-width:110px;text-align:center}
+.sub-tab:hover{border-color:var(--amber);transform:translateY(-2px)}
+.sub-tab.active{border-color:var(--red);background:rgba(255,46,99,.08);box-shadow:0 0 20px rgba(255,46,99,.1)}
+.sub-tab .code{font-family:var(--font-d);font-size:24px;font-weight:900;color:var(--red);line-height:1}
+.sub-tab .name{font-size:11px;color:var(--sub);margin-top:4px}
+
+.section-title{font-family:var(--font-d);font-size:11px;letter-spacing:3px;color:var(--cyan);display:flex;align-items:center;gap:8px;margin:20px 0 12px}
+.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--cyan),transparent)}
+
+.intel-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:10px;transition:.3s;position:relative}
+.intel-card:hover{border-color:rgba(255,215,0,.3);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.intel-card .date{font-family:var(--font-d);font-size:10px;color:var(--cyan);letter-spacing:1px}
+.intel-card .summary{margin-top:8px;font-size:14px;line-height:1.8;color:var(--text)}
+.copy-btn{position:absolute;top:12px;right:12px;background:rgba(8,247,254,.08);border:1px solid rgba(8,247,254,.2);color:var(--cyan);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;transition:.2s;font-family:var(--font-b)}
+.copy-btn:hover{background:rgba(8,247,254,.2)}
+
+.btn-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.btn{padding:12px 24px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);font-family:var(--font-b);font-size:14px;cursor:pointer;transition:.3s;display:flex;align-items:center;gap:6px;font-weight:500}
+.btn:hover{border-color:var(--gold);transform:translateY(-1px)}
+.btn:active{transform:scale(.97)}
+.btn-search{background:linear-gradient(135deg,var(--red),var(--purple));border-color:transparent;font-weight:700;color:#fff}
+.btn-search:hover{box-shadow:0 4px 24px rgba(255,46,99,.4)}
+.btn-gua{background:linear-gradient(135deg,var(--gold),var(--amber));border-color:transparent;color:#000;font-weight:700}
+.btn-gua:hover{box-shadow:0 4px 24px rgba(255,215,0,.4)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+
+.loading{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* 推演阁 */
+.div-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:900px){.div-layout{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+.panel-title{font-family:var(--font-c);font-size:22px;color:var(--gold);margin-bottom:16px}
+
+.field{margin-bottom:14px}
+.field label{font-size:12px;color:var(--sub);display:block;margin-bottom:4px}
+.field textarea,.field input,.field select{width:100%;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font-b);font-size:14px;outline:none;resize:vertical;transition:.2s}
+.field textarea:focus,.field input:focus{border-color:var(--gold);box-shadow:0 0 12px rgba(255,215,0,.15)}
+.methods{display:flex;gap:6px;flex-wrap:wrap}
+.meth{padding:8px 14px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;transition:.2s}
+.meth:hover{border-color:var(--gold)}
+.meth.active{background:rgba(255,215,0,.1);border-color:var(--gold);color:var(--gold)}
+
+/* 卦象 */
+.gua-row{display:flex;justify-content:center;gap:28px;margin:16px 0;flex-wrap:wrap}
+.gua-box{text-align:center;min-width:90px}
+.gua-lbl{font-size:10px;color:var(--sub);font-family:var(--font-d);letter-spacing:2px;margin-bottom:4px}
+.gua-sym{font-size:44px;line-height:1;color:var(--gold);text-shadow:0 0 16px rgba(255,215,0,.3)}
+.gua-nm{font-family:var(--font-c);font-size:18px;margin:4px 0}
+.gua-64{font-size:11px;color:var(--cyan)}
+.yao{width:56px;height:7px;margin:3px auto;border-radius:2px;position:relative}
+.yao.yang{background:var(--gold);box-shadow:0 0 5px rgba(255,215,0,.3)}
+.yao.yin{background:transparent;display:flex;gap:6px;justify-content:center}
+.yao.yin::before,.yao.yin::after{content:'';width:23px;height:7px;background:var(--gold);border-radius:2px;box-shadow:0 0 5px rgba(255,215,0,.3)}
+.yao.dong::after{content:'← 动';position:absolute;left:62px;top:-2px;font-size:9px;color:var(--red);white-space:nowrap;font-family:var(--font-b);background:none;width:auto;height:auto;box-shadow:none;border-radius:0}
+
+.ty-box{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;margin:14px 0;text-align:center}
+.ty-rel{font-size:22px;font-family:var(--font-c);color:var(--gold);margin:6px 0}
+.ty-fort{font-size:16px;font-weight:700;padding:6px 16px;border-radius:6px;display:inline-block;margin-top:4px}
+.fort-good{background:rgba(57,255,20,.12);color:var(--green)}
+.fort-bad{background:rgba(255,46,99,.12);color:var(--red)}
+.fort-mid{background:rgba(255,215,0,.12);color:var(--gold)}
+
+.ds-result{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;line-height:2;white-space:pre-wrap;font-size:14px;max-height:500px;overflow-y:auto}
+.ds-result::-webkit-scrollbar{width:4px}
+.ds-result::-webkit-scrollbar-thumb{background:var(--gold);border-radius:4px}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<header class="header">
+  <span class="status"><span class="dot"></span>ONLINE</span>
+  <span class="logo">🏯 天机阁</span>
+  <nav class="nav-tabs">
+    <button class="nav-tab active" data-page="intel">📡 情报站</button>
+    <button class="nav-tab" data-page="divine">🔮 推演阁</button>
+  </nav>
+</header>
+
+<!-- ============ 情报站 ============ -->
+<div class="page active" id="page-intel">
+  <div class="subject-tabs">
+    <div class="sub-tab active" data-sub="101"><div class="code">101</div><div class="name">政治·朝堂暗谍</div></div>
+    <div class="sub-tab" data-sub="201"><div class="code">201</div><div class="name">英语·密码破译</div></div>
+    <div class="sub-tab" data-sub="301"><div class="code">301</div><div class="name">数学·大漠算经</div></div>
+    <div class="sub-tab" data-sub="408"><div class="code">408</div><div class="name">计算机·天网矩阵</div></div>
+  </div>
+
+  <div class="section-title">最新情报快照</div>
+  <div id="intelCards"><div class="intel-card"><div style="color:var(--dim)">加载中...</div></div></div>
+
+  <div class="section-title">秘密蓝图</div>
+  <div id="bpCards"><div class="intel-card"><div style="color:var(--dim)">加载中...</div></div></div>
+
+  <div class="btn-row">
+    <button class="btn btn-search" id="btnSearch">📡 窃取最新情报</button>
+    <button class="btn btn-gua" id="btnToGua">🔮 拿情报去推演</button>
+  </div>
+
+  <div id="searchSec" style="display:none">
+    <div class="section-title">实时窃取 (PERPLEXITY)</div>
+    <div id="searchResult" class="intel-card"><div style="color:var(--dim)">等待搜索...</div></div>
+  </div>
+</div>
+
+<!-- ============ 推演阁 ============ -->
+<div class="page" id="page-divine">
+  <div class="div-layout">
+    <div class="panel">
+      <div class="panel-title">📜 起卦</div>
+      <div class="field"><label>卦问</label><textarea id="qQ" rows="2" placeholder="例：408计算机明年考研重点方向？"></textarea></div>
+      <div class="field">
+        <label>起卦方式</label>
+        <div class="methods">
+          <div class="meth active" data-m="datetime">🕐 年月日时</div>
+          <div class="meth" data-m="numbers">🔢 报数</div>
+          <div class="meth" data-m="text">📝 文字/数字</div>
+        </div>
+      </div>
+      <div class="field" id="fNums" style="display:none"><label>两个数字</label><div style="display:flex;gap:8px"><input type="number" id="n1" placeholder="上卦数" min="1"><input type="number" id="n2" placeholder="下卦数" min="1"></div></div>
+      <div class="field" id="fText" style="display:none"><label>输入文字/情报内容</label><textarea id="qT" rows="2" placeholder="输入任意文字或情报站复制的内容"></textarea></div>
+      <div class="field"><label>附加情报（可选，可从情报站复制粘贴）</label><textarea id="extra" rows="3" placeholder="粘贴情报站内容，DeepSeek会结合情报推演..."></textarea></div>
+      <button class="btn btn-gua" id="btnGo" style="width:100%;justify-content:center;font-size:16px;padding:14px">🔮 起卦推演</button>
+    </div>
+    <div class="panel">
+      <div class="panel-title">🔮 卦象</div>
+      <div id="guaOut"><div style="text-align:center;color:var(--dim);padding:50px 0"><div style="font-size:48px;opacity:.3">☰</div><div style="margin-top:8px">等待起卦...</div></div></div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:20px;display:none" id="dsPanel">
+    <div class="panel-title">🧠 DeepSeek · 北斗罡炁推演</div>
+    <div id="dsOut" class="ds-result">等待推演...</div>
+  </div>
+</div>
+
+<script>
+let curSub='101', curM='datetime', lastCopy='';
+
+// Tab
+document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById('page-'+t.dataset.page).classList.add('active');
+}));
+
+// Subject
+document.querySelectorAll('.sub-tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.sub-tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); curSub=t.dataset.sub; loadIntel(curSub);
+}));
+
+// Method
+document.querySelectorAll('.meth').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.meth').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); curM=t.dataset.m;
+  document.getElementById('fNums').style.display=curM==='numbers'?'':'none';
+  document.getElementById('fText').style.display=curM==='text'?'':'none';
+}));
+
+// Intel
+async function loadIntel(sub){
+  try{
+    const r=await(await fetch('/api/tianji/intel/'+sub)).json();
+    document.getElementById('intelCards').innerHTML=r.intel.map(i=>`
+      <div class="intel-card"><button class="copy-btn" onclick="doCopy(this)">📋 复制</button>
+      <div class="date">${i.date} · ${sub}</div><div class="summary">${i.summary||'暂无'}</div></div>
+    `).join('')||'<div class="intel-card" style="color:var(--dim)">暂无情报</div>';
+    document.getElementById('bpCards').innerHTML=r.blueprints.map(b=>`
+      <div class="intel-card"><button class="copy-btn" onclick="doCopy(this)">📋 复制</button>
+      <div class="date">${b.date} · ${b.mode}</div><div class="summary">${b.title||''}</div></div>
+    `).join('')||'<div class="intel-card" style="color:var(--dim)">暂无蓝图</div>';
+  }catch(e){document.getElementById('intelCards').innerHTML=`<div class="intel-card" style="color:var(--red)">加载失败</div>`}
+}
+
+function doCopy(btn){
+  const txt=btn.closest('.intel-card').querySelector('.summary').textContent;
+  navigator.clipboard.writeText(txt); lastCopy=txt;
+  btn.textContent='✅ 已复制'; setTimeout(()=>btn.textContent='📋 复制',1500);
+}
+
+// Search
+document.getElementById('btnSearch').addEventListener('click',async()=>{
+  const b=document.getElementById('btnSearch');b.disabled=true;b.innerHTML='<span class="loading"></span> 窃取中...';
+  document.getElementById('searchSec').style.display='';
+  try{
+    const r=await(await fetch('/api/tianji/search/'+curSub,{method:'POST'})).json();
+    document.getElementById('searchResult').innerHTML=`<button class="copy-btn" onclick="doCopy(this)">📋 复制</button>
+      <div class="date">实时 · ${r.name} · ${new Date().toLocaleString()}</div>
+      <div class="summary">${(r.content||'').replace(/\n/g,'<br>')}</div>`;
+  }catch(e){document.getElementById('searchResult').innerHTML='<div style="color:var(--red)">窃取失败</div>'}
+  b.disabled=false;b.innerHTML='📡 窃取最新情报';
+});
+
+// To Gua
+document.getElementById('btnToGua').addEventListener('click',()=>{
+  document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-tab')[1].classList.add('active');
+  document.getElementById('page-divine').classList.add('active');
+  if(lastCopy)document.getElementById('extra').value=lastCopy;
+});
+
+// Divine
+document.getElementById('btnGo').addEventListener('click',async()=>{
+  const b=document.getElementById('btnGo');b.disabled=true;b.innerHTML='<span class="loading"></span> 起卦推演中...';
+  try{
+    const body={method:curM, question:document.getElementById('qQ').value||'求问天机',
+      num1:parseInt(document.getElementById('n1').value)||0,
+      num2:parseInt(document.getElementById('n2').value)||0,
+      text:document.getElementById('qT').value||'',
+      extra_context:document.getElementById('extra').value||''};
+    const r=await(await fetch('/api/tianji/divine',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})).json();
+    renderGua(r.gua);
+    // DeepSeek
+    document.getElementById('dsPanel').style.display='';
+    document.getElementById('dsOut').innerHTML='<span class="loading"></span> DeepSeek-R1 推演中...';
+    const ds=await(await fetch('/api/tianji/deepseek',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question:body.question,gua:r.gua,extra_context:body.extra_context})})).json();
+    document.getElementById('dsOut').textContent=ds.result||'[推演失败]';
+  }catch(e){document.getElementById('guaOut').innerHTML=`<div style="color:var(--red);text-align:center;padding:20px">失败: ${e.message}</div>`}
+  b.disabled=false;b.innerHTML='🔮 起卦推演';
+});
+
+function renderGua(g){
+  const{ben_gua:bg,hu_gua:hg,bian_gua:vg,dong_yao:dy,tiyong:ty}=g;
+  function yaoHTML(uy,ly,d){
+    let h='';const all=[...ly,...uy];
+    for(let i=5;i>=0;i--){
+      const cls=all[i]===1?'yang':'yin';
+      const dm=(i+1)===d?'dong':'';
+      h+=`<div class="yao ${cls} ${dm}"></div>`;
+    }return h;
+  }
+  let fc='fort-mid';
+  if(ty.fortune.includes('吉')&&!ty.fortune.includes('凶'))fc='fort-good';
+  if(ty.fortune.includes('凶'))fc='fort-bad';
+  document.getElementById('guaOut').innerHTML=`
+    <div style="font-size:11px;color:var(--cyan);text-align:center;font-family:var(--font-d);letter-spacing:1px;margin-bottom:8px">${g.method} · ${g.time_info}</div>
+    <div class="gua-row">
+      <div class="gua-box"><div class="gua-lbl">本卦</div><div class="gua-sym">${bg.upper_symbol}</div>${yaoHTML(bg.upper_yao,bg.lower_yao,dy)}<div class="gua-sym">${bg.lower_symbol}</div><div class="gua-nm">${bg.name}</div></div>
+      <div class="gua-box"><div class="gua-lbl">互卦</div><div class="gua-sym">${hg.upper_symbol}</div>${yaoHTML(hg.upper_yao,hg.lower_yao,0)}<div class="gua-sym">${hg.lower_symbol}</div><div class="gua-nm">${hg.name}</div></div>
+      <div class="gua-box"><div class="gua-lbl">变卦</div><div class="gua-sym">${vg.upper_symbol}</div>${yaoHTML(vg.upper_yao,vg.lower_yao,0)}<div class="gua-sym">${vg.lower_symbol}</div><div class="gua-nm">${vg.name}</div></div>
+    </div>
+    <div class="ty-box">
+      <div style="font-size:13px;color:var(--sub)">体卦 <strong style="color:var(--gold)">${ty.ti.name}·${ty.ti.wuxing}</strong>(${ty.ti.pos}) ｜ 用卦 <strong style="color:var(--cyan)">${ty.yong.name}·${ty.yong.wuxing}</strong>(${ty.yong.pos})</div>
+      <div class="ty-rel">${ty.relation}</div>
+      <div class="ty-fort ${fc}">${ty.fortune}</div>
+    </div>
+    <div style="font-size:11px;color:var(--dim);text-align:center">动爻：第${dy}爻</div>`;
+}
+
+loadIntel('101');
+</script>
+</body>
+</html>

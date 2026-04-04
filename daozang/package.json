@@ -1,0 +1,12 @@
+{
+  "name": "daozang",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "echo done"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/cli": "^8.3.0",
+    "@capacitor/core": "^8.3.0"
+  }
+}

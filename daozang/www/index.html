@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>神霄道藏</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;700;900&display=swap');
+:root{--bg:#080608;--bg2:#100e14;--card:rgba(18,14,22,.94);--gold:#c9a84c;--red:#8b2500;--jade:#3a7d5c;--purple:#4a2d6e;--text:#d8d0c0;--dim:#4a453e;--sub:#7a7268;--bdr:rgba(201,168,76,.08);--font:'Noto Serif SC',serif;--brush:'Ma Shan Zheng',cursive}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+button{font-family:var(--font)}
+
+.bg{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 20%,rgba(201,168,76,.03),transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(74,45,110,.04),transparent 50%);pointer-events:none}
+
+/* Login */
+#loginP{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center}
+#loginP.hide{display:none}
+.lbox{width:85%;max-width:300px;text-align:center}
+.lbox h1{font-family:var(--brush);font-size:34px;color:var(--gold);text-shadow:0 0 24px rgba(201,168,76,.25)}
+.lbox .sub{font-size:10px;color:var(--sub);margin:2px 0 22px;letter-spacing:4px}
+.lbox input{width:100%;padding:13px;background:var(--bg2);border:1px solid var(--bdr);border-radius:6px;color:var(--text);font-size:14px;margin-bottom:8px;outline:none;font-family:var(--font)}
+.lbox input:focus{border-color:var(--gold)}
+.lbtn{width:100%;padding:14px;border:none;border-radius:6px;background:linear-gradient(135deg,var(--gold),#7a5c1e);color:#fff;font-size:15px;font-weight:700;font-family:var(--brush);letter-spacing:3px}
+.lerr{color:#c23b22;font-size:11px;margin-top:6px}
+
+/* Layout */
+.main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative;z-index:1}
+.pg{display:none;padding:12px 12px 24px;min-height:100%}
+.pg.on{display:block}
+
+.bnav{display:flex;background:rgba(8,6,8,.97);border-top:1px solid var(--bdr);padding:4px 0;padding-bottom:max(4px,env(safe-area-inset-bottom))}
+.bnav .ni{flex:1;text-align:center;padding:6px 0;cursor:pointer;color:var(--dim);font-size:9px;transition:.2s}
+.bnav .ni.on{color:var(--gold)}
+.bnav .ni .ico{font-size:20px;display:block;margin-bottom:1px}
+
+/* Header */
+.hdr{text-align:center;padding:14px 10px 10px;padding-top:max(14px,env(safe-area-inset-top))}
+.hdr h1{font-family:var(--brush);font-size:24px;color:var(--gold);text-shadow:0 0 16px rgba(201,168,76,.2)}
+.hdr .sub{font-size:10px;color:var(--sub);letter-spacing:3px;margin-top:2px}
+
+/* Common */
+.cd{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:10px;transition:.2s}
+.cd:active{transform:scale(.98)}
+.stl{font-family:var(--brush);font-size:14px;color:var(--gold);margin:16px 0 8px;display:flex;align-items:center;gap:6px}
+.stl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,.2),transparent)}
+.btn{padding:10px 18px;border-radius:6px;border:1px solid var(--bdr);background:var(--card);color:var(--text);font-size:13px;cursor:pointer;font-family:var(--font);transition:.2s}
+.btn:active{transform:scale(.95)}
+.btn-g{background:linear-gradient(135deg,var(--gold),#7a5c1e);border:none;color:#fff;font-weight:700}
+.btn-j{background:linear-gradient(135deg,var(--jade),#1e4d3a);border:none;color:#fff;font-weight:700}
+.btn-p{background:linear-gradient(135deg,var(--purple),#2d1a42);border:none;color:#ddd;font-weight:700}
+.btn:disabled{opacity:.4}
+textarea,input[type=text]{width:100%;padding:11px;background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;color:var(--text);font-size:14px;outline:none;font-family:var(--font);resize:vertical}
+textarea:focus,input:focus{border-color:var(--gold)}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.15);border-top-color:#ccc;border-radius:50%;animation:sp .6s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* Topic cards */
+.topic{display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer}
+.topic .tico{font-size:28px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(201,168,76,.06);border:1px solid var(--bdr)}
+.topic .tinfo h3{font-size:15px;font-weight:700;margin-bottom:2px}
+.topic .tinfo p{font-size:11px;color:var(--sub);line-height:1.4}
+
+/* Output */
+.dao-out{background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;padding:16px;font-size:14px;line-height:2;white-space:pre-wrap;max-height:500px;overflow-y:auto}
+.dao-out::-webkit-scrollbar{width:3px}
+.dao-out::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+.dao-out .placeholder{text-align:center;color:var(--dim);padding:40px 0}
+.dao-out .placeholder .big{font-size:36px;opacity:.3;margin-bottom:6px}
+
+/* Progress */
+.prog{display:flex;align-items:center;gap:8px;font-size:11px;margin:4px 0}
+.prog .bar{flex:1;height:4px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden}
+.prog .fill{height:100%;border-radius:2px;background:var(--gold);transition:width .5s}
+
+/* Bookmark */
+.bm{background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:10px;margin:6px 0;font-size:13px;line-height:1.6;position:relative}
+.bm .bmdate{font-size:9px;color:var(--sub);font-family:monospace}
+.bm .bmdel{position:absolute;top:6px;right:8px;color:var(--sub);cursor:pointer;font-size:12px}
+
+/* Fu gallery */
+.fu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fu-card{background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:10px;text-align:center;cursor:pointer;transition:.2s}
+.fu-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.fu-card .fc-icon{font-size:28px;margin-bottom:4px}
+.fu-card .fc-name{font-size:12px;font-weight:700}
+.fu-card .fc-desc{font-size:9px;color:var(--sub);margin-top:2px;line-height:1.3}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<!-- LOGIN -->
+<div id="loginP">
+<div class="lbox">
+  <h1>☯️ 神霄道藏</h1>
+  <div class="sub">西河派 · 神霄宫</div>
+  <input type="text" id="lu" placeholder="道号">
+  <input type="password" id="lp" placeholder="口令">
+  <button class="lbtn" onclick="doLogin()">入道</button>
+  <div class="lerr" id="lerr"></div>
+</div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+<div class="main">
+
+<!-- P1: 道法总览 -->
+<div class="pg on" id="p1">
+  <div class="hdr"><h1>☯️ 神霄道藏</h1><div class="sub">西河派 · 神霄宫秘典</div></div>
+
+  <div class="stl">修习道法</div>
+  <div class="cd topic" onclick="study('fulu')"><div class="tico">📜</div><div class="tinfo"><h3>符箓之道</h3><p>龙潭阁藏版《符咒全书》· 画符要诀 · 开光加持 · 各类符箓用法</p></div></div>
+  <div class="cd topic" onclick="study('leifa')"><div class="tico">⚡</div><div class="tinfo"><h3>神霄雷法</h3><p>五雷正法 · 神霄派传承 · 王文卿祖师 · 召雷咒 · 步罡踏斗</p></div></div>
+  <div class="cd topic" onclick="study('neidan')"><div class="tico">🔮</div><div class="tinfo"><h3>内丹术</h3><p>炼精化气 · 炼气化神 · 小周天 · 大周天 · 三花聚顶 · 五气朝元</p></div></div>
+  <div class="cd topic" onclick="study('yixue')"><div class="tico">☰</div><div class="tinfo"><h3>易学</h3><p>先天八卦 · 后天八卦 · 梅花易数 · 河图洛书 · 太极阴阳</p></div></div>
+  <div class="cd topic" onclick="study('jingdian')"><div class="tico">📖</div><div class="tinfo"><h3>道教经典</h3><p>道德经 · 清静经 · 黄庭经 · 玉皇心印妙经 · 度人经 · 北斗经</p></div></div>
+  <div class="cd topic" onclick="study('keyi')"><div class="tico">🕯️</div><div class="tinfo"><h3>科仪法事</h3><p>早晚功课 · 步罡踏斗 · 叩齿咽津 · 存思 · 上香礼仪 · 开坛</p></div></div>
+
+  <div class="stl">修习进度</div>
+  <div id="progBars"></div>
+</div>
+
+<!-- P2: 符箓殿 -->
+<div class="pg" id="p2">
+  <div class="hdr"><h1>📜 符箓殿</h1><div class="sub">龙潭阁藏版 · 符咒全书</div></div>
+
+  <div class="stl">符箓分类</div>
+  <div class="fu-grid">
+    <div class="fu-card" onclick="fuDetail('护身符')"><div class="fc-icon">🛡️</div><div class="fc-name">护身符</div><div class="fc-desc">灵官保安符·太上护身</div></div>
+    <div class="fu-card" onclick="fuDetail('镇宅符')"><div class="fc-icon">🏠</div><div class="fc-name">镇宅符</div><div class="fc-desc">天官赐福·镇宅安宅</div></div>
+    <div class="fu-card" onclick="fuDetail('驱邪符')"><div class="fc-icon">⚡</div><div class="fc-name">驱邪符</div><div class="fc-desc">天蓬尺·北帝伏魔</div></div>
+    <div class="fu-card" onclick="fuDetail('治病符')"><div class="fc-icon">💚</div><div class="fc-name">治病符</div><div class="fc-desc">回春符·祛病消灾</div></div>
+    <div class="fu-card" onclick="fuDetail('招财符')"><div class="fc-icon">💰</div><div class="fc-name">招财符</div><div class="fc-desc">五路财神·招财进宝</div></div>
+    <div class="fu-card" onclick="fuDetail('考试符')"><div class="fc-icon">📝</div><div class="fc-name">文昌符</div><div class="fc-desc">文昌帝君·金榜题名</div></div>
+    <div class="fu-card" onclick="fuDetail('安魂符')"><div class="fc-icon">🕊️</div><div class="fc-name">安魂符</div><div class="fc-desc">收魂安魂·镇魂符箓</div></div>
+    <div class="fu-card" onclick="fuDetail('天蓬咒')"><div class="fc-icon">🌟</div><div class="fc-name">天蓬咒</div><div class="fc-desc">北极天蓬大法</div></div>
+    <div class="fu-card" onclick="fuDetail('雷符')"><div class="fc-icon">⛈️</div><div class="fc-name">雷符</div><div class="fc-desc">五雷符·神霄雷令</div></div>
+  </div>
+
+  <div class="stl">画符口诀</div>
+  <div class="cd" style="font-size:13px;line-height:1.8;color:var(--sub)">
+    点击上方符箓，DeepSeek为你讲解画法、口诀与用法
+  </div>
+  <div id="fuOutput" class="dao-out" style="display:none"></div>
+</div>
+
+<!-- P3: 传法堂 -->
+<div class="pg" id="p3">
+  <div class="hdr"><h1>🏛️ 传法堂</h1><div class="sub">向道请教</div></div>
+  <div class="cd">
+    <textarea id="askQ" rows="3" placeholder="弟子请教任何道教问题...&#10;&#10;例：神霄派五雷正法的修炼次第是什么？&#10;例：如何理解道德经第一章？&#10;例：画护身符的步骤和口诀？"></textarea>
+    <button class="btn btn-g" style="width:100%;margin-top:8px;padding:12px;font-size:15px" onclick="askDao()">请教师父</button>
+  </div>
+
+  <div class="stl">快速请教</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+    <button class="btn" onclick="quickAsk('西河派神霄宮的历史传承和核心法脉')">西河派传承</button>
+    <button class="btn" onclick="quickAsk('神霄派日常修炼功课应该怎么做')">日常功课</button>
+    <button class="btn" onclick="quickAsk('初学者如何开始学习画符')">画符入门</button>
+    <button class="btn" onclick="quickAsk('道教三清四御五老是指谁')">神仙体系</button>
+    <button class="btn" onclick="quickAsk('金光神咒全文及逐句解析')">金光神咒</button>
+    <button class="btn" onclick="quickAsk('净心神咒净口神咒净身神咒全文')">净三业咒</button>
+  </div>
+  <div id="askOutput" class="dao-out">
+    <div class="placeholder"><div class="big">☯️</div>道可道 非常道<br>名可名 非常名<br><br><span style="font-size:11px">向师父请教任何道教问题</span></div>
+  </div>
+</div>
+
+<!-- P4: 藏经阁 -->
+<div class="pg" id="p4">
+  <div class="hdr"><h1>📚 藏经阁</h1><div class="sub">收藏与笔记</div></div>
+  <div class="stl">经典研读</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+    <button class="btn btn-g" onclick="readJing('道德经')">道德经</button>
+    <button class="btn btn-j" onclick="readJing('清静经')">清静经</button>
+    <button class="btn btn-p" onclick="readJing('黄庭经')">黄庭经</button>
+    <button class="btn" onclick="readJing('心印妙经')">心印妙经</button>
+    <button class="btn" onclick="readJing('度人经')">度人经</button>
+    <button class="btn" onclick="readJing('北斗经')">北斗经</button>
+    <button class="btn" onclick="readJing('日诵早课')">早课经</button>
+    <button class="btn" onclick="readJing('日诵晚课')">晚课经</button>
+  </div>
+  <div id="jingOutput" class="dao-out" style="min-height:120px">
+    <div class="placeholder"><div class="big">📖</div>选择经典研读</div>
+  </div>
+
+  <div class="stl">我的收藏</div>
+  <button class="btn" style="margin-bottom:8px;font-size:11px" onclick="saveBookmark()">📌 收藏当前内容</button>
+  <div id="bookmarks"></div>
+</div>
+
+</div>
+<!-- Bottom Nav -->
+<nav class="bnav" id="bnav" style="display:none">
+  <div class="ni on" data-p="1" onclick="goP(this)"><span class="ico">☯️</span>道法</div>
+  <div class="ni" data-p="2" onclick="goP(this)"><span class="ico">📜</span>符箓</div>
+  <div class="ni" data-p="3" onclick="goP(this)"><span class="ico">🏛️</span>传法</div>
+  <div class="ni" data-p="4" onclick="goP(this)"><span class="ico">📚</span>藏经</div>
+</nav>
+</div>
+
+<script>
+const ACCT='zmqawqw1314',PWD='zmq5201314';
+const OK='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';
+let lastContent='';
+
+// Login
+function doLogin(){const u=document.getElementById('lu').value.trim(),p=document.getElementById('lp').value.trim();if(u===ACCT&&p===PWD){localStorage.setItem('dz_auth','1');showApp()}else{document.getElementById('lerr').textContent='道号或口令错误'}}
+function showApp(){document.getElementById('loginP').classList.add('hide');document.getElementById('app').style.display='';document.getElementById('bnav').style.display='';loadProg();loadBM()}
+if(localStorage.getItem('dz_auth')==='1')showApp();
+
+// Nav
+function goP(el){document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.pg').forEach(x=>x.classList.remove('on'));el.classList.add('on');document.getElementById('p'+el.dataset.p).classList.add('on');document.querySelector('.main').scrollTop=0}
+
+// DeepSeek API
+async function ds(prompt){
+  const r=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+    method:'POST',headers:{'Authorization':'Bearer '+OK,'Content-Type':'application/json'},
+    body:JSON.stringify({model:'deepseek/deepseek-r1',messages:[
+      {role:'system',content:'你是道教西河派神霄宫的传法长老，精通符箓、雷法、内丹、易学、科仪等一切道教学问。弟子是神霄宫初入门弟子，正在修习道法。请以师父身份传授，引用经典原文，中文回答，详尽准确。'},
+      {role:'user',content:prompt}
+    ],temperature:0.7,max_tokens:3000})
+  });
+  const d=await r.json();return d.choices?.[0]?.message?.content||'[传法未果]';
+}
+
+// Study topics
+const TOPICS={
+  fulu:{name:'符箓之道',prompt:'为西河派神霄宫弟子系统讲解符箓之道：\n1. 符箓的起源与道教符箓史\n2. 神霄派符箓特点（与正一派的异同）\n3. 画符前的准备（净手净口净心、禁忌）\n4. 画符的基本步骤（开笔、运笔、收笔）\n5. 常用口诀（金光神咒、净天地神咒）\n6. 符水的制作与使用\n7. 开光加持的方法'},
+  leifa:{name:'神霄雷法',prompt:'为神霄宫弟子讲解神霄雷法：\n1. 神霄派历史（汪火师→王文卿→林灵素→萨守坚）\n2. 五雷正法的体系与修炼次第\n3. 天雷、地雷、水雷、神雷、社雷的区别\n4. 召将发符的基本原理\n5. 步罡踏斗的步法（北斗七星罡）\n6. 掐诀存想的方法\n7. 与正一天师道雷法的关系与区别'},
+  neidan:{name:'内丹术',prompt:'讲解道教内丹术基础修行：\n1. 筑基功夫（百日筑基）\n2. 炼精化气的方法与要诀\n3. 炼气化神的进阶\n4. 小周天运行路线（任督二脉）\n5. 大周天与十二正经\n6. 三花聚顶、五气朝元\n7. 坐忘、存思、守一的区别\n8. 修炼注意事项与禁忌'},
+  yixue:{name:'易学',prompt:'讲解道教易学体系：\n1. 太极—两仪—四象—八卦的生成原理\n2. 先天八卦与后天八卦的区别（伏羲/文王）\n3. 河图洛书的含义\n4. 天干地支与五行配属\n5. 梅花易数起卦法（邵康节）\n6. 六十四卦在道教修行中的运用\n7. 道教对《周易》的独特诠释'},
+  jingdian:{name:'道教经典',prompt:'系统介绍道教核心经典：\n1. 《道德经》核心思想（道法自然、无为而治）\n2. 《清静经》修心要义（人能常清静，天地悉皆归）\n3. 《黄庭经》内修体系（上清派内景）\n4. 《玉皇心印妙经》（上药三品，神与气精）\n5. 《度人经》的宇宙观\n6. 《北斗经》的礼斗修行\n7. 各经典的修学顺序建议'},
+  keyi:{name:'科仪法事',prompt:'讲解道教科仪法事基础：\n1. 早晚功课的内容与意义\n2. 上香礼仪（三炷香的含义、持香姿势）\n3. 叩齿咽津的方法与功效\n4. 步罡踏斗详细步法（北斗罡、三台罡）\n5. 存思观想的入门方法\n6. 请神送神的规矩\n7. 斋醮法事的基本流程'}
+};
+
+async function study(key){
+  const t=TOPICS[key];if(!t)return;
+  goP({dataset:{p:'3'},classList:{add:()=>{},remove:()=>{}}});
+  document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.ni')[2].classList.add('on');
+  document.querySelectorAll('.pg').forEach(x=>x.classList.remove('on'));
+  document.getElementById('p3').classList.add('on');
+  const out=document.getElementById('askOutput');
+  out.innerHTML='<span class="spin"></span> 传法中...';
+  try{const r=await ds(t.prompt);out.textContent=r;lastContent=r;addProg(key,10);loadProg()}catch(e){out.textContent='传法失败：'+e.message}
+}
+
+// Fu detail
+async function fuDetail(name){
+  const out=document.getElementById('fuOutput');out.style.display='';
+  out.innerHTML='<span class="spin"></span> 查阅符箓...';
+  try{
+    const r=await ds(`详细讲解"${name}"：\n1. 这种符箓的来历和用途\n2. 画符的详细步骤\n3. 画符时念的口诀/咒语全文\n4. 用符的方法（贴/烧/化水等）\n5. 注意事项和禁忌\n6. 在《符咒全书》中的记载\n以师父传授弟子的口吻讲解。`);
+    out.textContent=r;lastContent=r;addProg('fulu',5);loadProg();
+  }catch(e){out.textContent='查阅失败'}
+}
+
+// Ask
+async function askDao(){
+  const q=document.getElementById('askQ').value.trim();if(!q)return;
+  const out=document.getElementById('askOutput');out.innerHTML='<span class="spin"></span> 参悟中...';
+  try{const r=await ds(q);out.textContent=r;lastContent=r}catch(e){out.textContent='失败：'+e.message}
+}
+async function quickAsk(q){
+  document.getElementById('askQ').value=q;
+  const out=document.getElementById('askOutput');out.innerHTML='<span class="spin"></span> 传法中...';
+  try{const r=await ds(q);out.textContent=r;lastContent=r}catch(e){out.textContent='失败：'+e.message}
+}
+
+// Jing
+async function readJing(name){
+  const out=document.getElementById('jingOutput');out.innerHTML='<span class="spin"></span> 诵经中...';
+  try{
+    const r=await ds(`请给出《${name}》的经文全文（或主要段落），然后逐段讲解其含义和修行指导。如果篇幅太长只给核心章节。以传法师父对弟子的口吻讲解。`);
+    out.textContent=r;lastContent=r;addProg('jingdian',5);loadProg();
+  }catch(e){out.textContent='诵经失败'}
+}
+
+// Progress
+function addProg(key,val){const p=JSON.parse(localStorage.getItem('dz_prog')||'{}');p[key]=Math.min(100,(p[key]||0)+val);localStorage.setItem('dz_prog',JSON.stringify(p))}
+function loadProg(){
+  const p=JSON.parse(localStorage.getItem('dz_prog')||'{}');
+  const items=[['fulu','📜 符箓'],['leifa','⚡ 雷法'],['neidan','🔮 内丹'],['yixue','☰ 易学'],['jingdian','📖 经典'],['keyi','🕯️ 科仪']];
+  document.getElementById('progBars').innerHTML=items.map(([k,n])=>`<div class="prog"><span style="width:55px;color:var(--sub)">${n}</span><div class="bar"><div class="fill" style="width:${p[k]||0}%"></div></div><span style="width:28px;text-align:right;color:var(--dim)">${p[k]||0}%</span></div>`).join('');
+}
+
+// Bookmarks
+function saveBookmark(){
+  if(!lastContent){alert('暂无内容可收藏');return}
+  const bm=JSON.parse(localStorage.getItem('dz_bm')||'[]');
+  bm.push({date:new Date().toLocaleDateString(),text:lastContent.slice(0,200)+'...',full:lastContent,ts:Date.now()});
+  localStorage.setItem('dz_bm',JSON.stringify(bm));loadBM();
+}
+function loadBM(){
+  const bm=JSON.parse(localStorage.getItem('dz_bm')||'[]').reverse();
+  document.getElementById('bookmarks').innerHTML=bm.map((b,i)=>`<div class="bm"><span class="bmdel" onclick="delBM(${bm.length-1-i})">×</span><div class="bmdate">${b.date}</div><div style="margin-top:4px">${b.text}</div></div>`).join('')||'<div style="color:var(--dim);font-size:12px">暂无收藏</div>';
+}
+function delBM(i){const bm=JSON.parse(localStorage.getItem('dz_bm')||'[]');bm.splice(i,1);localStorage.setItem('dz_bm',JSON.stringify(bm));loadBM()}
+</script>
+</body>
+</html>

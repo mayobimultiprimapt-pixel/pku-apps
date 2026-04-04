@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>神霄修仙录</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700;900&display=swap');
+:root{--bg:#080810;--bg2:#0e0e1a;--card:rgba(16,14,24,.95);--gold:#d4a843;--red:#c23b22;--cyan:#5bc0be;--purple:#7b2d8e;--green:#2ecc71;--jade:#38b27a;--text:#ddd5c4;--dim:#5a5248;--sub:#8a8070;--bdr:rgba(212,168,67,.1);--font:'Noto Serif SC',serif;--brush:'Ma Shan Zheng',cursive}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+button{font-family:var(--font)}
+
+/* Textures */
+.bg-texture{position:fixed;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(212,168,67,.03),transparent 70%),radial-gradient(ellipse at 70% 80%,rgba(123,45,142,.03),transparent 70%);pointer-events:none;z-index:0}
+
+/* Login */
+#loginP{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center}
+#loginP.hide{display:none}
+.lbox{width:85%;max-width:300px;text-align:center}
+.lbox h1{font-family:var(--brush);font-size:32px;color:var(--gold);margin-bottom:2px;text-shadow:0 0 20px rgba(212,168,67,.3)}
+.lbox .sub{font-size:10px;color:var(--sub);margin-bottom:20px;letter-spacing:3px}
+.lbox input{width:100%;padding:12px;background:var(--bg2);border:1px solid var(--bdr);border-radius:6px;color:var(--text);font-size:14px;margin-bottom:8px;outline:none;font-family:var(--font)}
+.lbox input:focus{border-color:var(--gold)}
+.lbtn{width:100%;padding:13px;border:none;border-radius:6px;background:linear-gradient(135deg,var(--gold),#8b6914);color:#fff;font-size:15px;font-weight:700;font-family:var(--brush);letter-spacing:2px}
+.lerr{color:var(--red);font-size:11px;margin-top:6px}
+
+/* Main */
+.main{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;position:relative;z-index:1}
+.scr{display:none;padding:12px 10px 20px;min-height:100%}
+.scr.on{display:block}
+
+/* Header Bar */
+.hbar{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:rgba(8,8,16,.9);border-bottom:1px solid var(--bdr);position:sticky;top:0;z-index:10;padding-top:max(6px,env(safe-area-inset-top))}
+.hbar .realm{font-family:var(--brush);font-size:16px;color:var(--gold)}
+.hbar .hpbar{width:100px;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.hbar .hpfill{height:100%;background:linear-gradient(90deg,var(--red),#e74c3c);border-radius:4px;transition:width .5s}
+.hbar .stats{font-size:9px;color:var(--sub);display:flex;gap:8px}
+
+/* Bottom Nav */
+.bnav{display:flex;background:rgba(8,8,16,.97);border-top:1px solid var(--bdr);padding:4px 0;padding-bottom:max(4px,env(safe-area-inset-bottom))}
+.bnav .ni{flex:1;text-align:center;padding:5px 0;cursor:pointer;color:var(--dim);font-size:9px}
+.bnav .ni.on{color:var(--gold)}
+.bnav .ni .ico{font-size:18px;display:block;margin-bottom:1px}
+
+/* Cards */
+.cd{background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:12px;margin-bottom:8px}
+.stl{font-family:var(--brush);font-size:13px;color:var(--gold);margin:12px 0 6px;display:flex;align-items:center;gap:6px}
+.stl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent);opacity:.2}
+
+/* Btn */
+.btn{padding:9px 16px;border-radius:6px;border:1px solid var(--bdr);background:var(--card);color:var(--text);font-size:13px;cursor:pointer;font-family:var(--font)}
+.btn-g{background:linear-gradient(135deg,var(--gold),#8b6914);border:none;color:#fff;font-weight:700}
+.btn-r{background:linear-gradient(135deg,var(--red),#8b1a1a);border:none;color:#fff;font-weight:700}
+.btn-j{background:linear-gradient(135deg,var(--jade),#1a6b4a);border:none;color:#fff;font-weight:700}
+.btn:disabled{opacity:.4}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ===== CULTIVATION HOME ===== */
+.cult-ring{width:160px;height:160px;margin:12px auto;position:relative}
+.cult-ring svg{transform:rotate(-90deg)}
+.cult-name{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.cult-name .lv{font-family:var(--brush);font-size:22px;color:var(--gold);text-shadow:0 0 12px rgba(212,168,67,.4)}
+.cult-name .xp{font-size:10px;color:var(--sub)}
+
+.wx-row{display:flex;justify-content:center;gap:6px;margin:10px 0}
+.wx{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:18px;border:2px solid var(--bdr);cursor:pointer;transition:.2s}
+.wx:hover{transform:scale(1.1)}
+.wx .wn{font-size:8px;margin-top:1px}
+.wx.metal{background:rgba(192,192,192,.1);border-color:rgba(192,192,192,.3);color:#c0c0c0}
+.wx.water{background:rgba(0,100,200,.1);border-color:rgba(0,100,200,.3);color:#4488cc}
+.wx.wood{background:rgba(0,180,80,.1);border-color:rgba(0,180,80,.3);color:#2ecc71}
+.wx.fire{background:rgba(200,50,30,.1);border-color:rgba(200,50,30,.3);color:#e74c3c}
+.wx.earth{background:rgba(180,140,60,.1);border-color:rgba(180,140,60,.3);color:#d4a843}
+
+/* ===== BATTLE ===== */
+.battle-area{text-align:center;padding:10px 0}
+.enemy{margin:8px auto;padding:12px;background:rgba(194,59,34,.06);border:1px solid rgba(194,59,34,.15);border-radius:10px;max-width:280px}
+.enemy .ename{font-family:var(--brush);font-size:18px;color:var(--red)}
+.enemy .ehp{margin-top:4px}
+.ehpbar{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin-top:2px}
+.ehpfill{height:100%;background:var(--red);border-radius:3px;transition:width .3s}
+.intent{font-size:11px;color:var(--sub);margin-top:4px}
+
+.hand{display:flex;gap:6px;overflow-x:auto;padding:8px 4px;-webkit-overflow-scrolling:touch;justify-content:center;flex-wrap:wrap}
+.hand::-webkit-scrollbar{display:none}
+
+.fu{width:72px;min-height:100px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);padding:6px;text-align:center;cursor:pointer;transition:.2s;flex-shrink:0}
+.fu:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 4px 16px rgba(212,168,67,.2)}
+.fu .fcost{font-size:9px;color:var(--cyan);position:absolute;top:2px;right:4px}
+.fu .ficon{font-size:22px;margin:2px 0}
+.fu .fname{font-size:10px;font-weight:700;line-height:1.2}
+.fu .fdesc{font-size:8px;color:var(--sub);margin-top:2px;line-height:1.2}
+.fu.atk{border-color:rgba(194,59,34,.3)}
+.fu.def{border-color:rgba(91,192,190,.3)}
+.fu.spc{border-color:rgba(123,45,142,.3)}
+
+.qi-bar{display:flex;gap:3px;justify-content:center;margin:6px 0}
+.qi-orb{width:18px;height:18px;border-radius:50%;background:rgba(212,168,67,.2);border:1px solid rgba(212,168,67,.3)}
+.qi-orb.full{background:var(--gold);box-shadow:0 0 8px rgba(212,168,67,.5)}
+
+/* Quiz popup */
+.quiz-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:50;display:flex;align-items:center;justify-content:center;display:none}
+.quiz-overlay.show{display:flex}
+.quiz-box{width:90%;max-width:340px;background:var(--bg2);border:1px solid var(--gold);border-radius:12px;padding:16px}
+.quiz-box .qq{font-size:14px;line-height:1.7;margin-bottom:10px}
+.quiz-box .qo{padding:10px;border:1px solid var(--bdr);border-radius:6px;margin:4px 0;cursor:pointer;font-size:13px;transition:.2s}
+.quiz-box .qo:hover{border-color:var(--gold)}
+.quiz-box .qo.right{border-color:var(--jade);background:rgba(46,204,113,.1)}
+.quiz-box .qo.wrong{border-color:var(--red);background:rgba(194,59,34,.1)}
+
+/* MAP */
+.map-node{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:2px solid var(--bdr);margin:4px;font-size:16px;cursor:pointer;transition:.2s}
+.map-node:hover{border-color:var(--gold);transform:scale(1.1)}
+.map-node.current{border-color:var(--gold);box-shadow:0 0 12px rgba(212,168,67,.4)}
+.map-node.done{opacity:.4}
+.map-row{text-align:center;margin:4px 0}
+
+/* Dao study */
+.dao-output{background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;padding:12px;font-size:13px;line-height:1.9;white-space:pre-wrap;max-height:400px;overflow-y:auto}
+
+/* Progress */
+.pbar{height:5px;background:var(--bg2);border-radius:3px;overflow:hidden;margin:3px 0}
+.pbar .pf{height:100%;border-radius:3px;transition:width .5s}
+</style>
+</head>
+<body>
+<div class="bg-texture"></div>
+
+<!-- LOGIN -->
+<div id="loginP">
+<div class="lbox">
+  <h1>神霄修仙录</h1>
+  <div class="sub">西河派 · 神霄宫</div>
+  <input type="text" id="lu" placeholder="道号" autocomplete="off">
+  <input type="password" id="lp" placeholder="口令">
+  <button class="lbtn" onclick="doLogin()">入道</button>
+  <div class="lerr" id="lerr"></div>
+</div>
+</div>
+
+<!-- APP -->
+<div id="appMain" style="display:none">
+<div class="hbar">
+  <span class="realm" id="hRealm">练气一层</span>
+  <div><div class="hbar stats"><span>❤️ <span id="hHP">100</span></span><span>🛡️ <span id="hDef">0</span></span><span>⚡ <span id="hQi">3</span>/3</span></div>
+  <div class="hpbar"><div class="hpfill" id="hHPbar" style="width:100%"></div></div></div>
+  <span class="hbar stats">💰<span id="hGold">0</span> 📍<span id="hFloor">1</span>F</span>
+</div>
+<div class="main">
+
+<!-- SCR1: 洞府 (Home) -->
+<div class="scr on" id="s1">
+  <div class="cd" style="text-align:center">
+    <div class="cult-ring">
+      <svg width="160" height="160"><circle cx="80" cy="80" r="72" fill="none" stroke="rgba(212,168,67,.1)" stroke-width="5"/><circle id="cultCircle" cx="80" cy="80" r="72" fill="none" stroke="var(--gold)" stroke-width="5" stroke-dasharray="452" stroke-dashoffset="226" stroke-linecap="round"/></svg>
+      <div class="cult-name"><div class="lv" id="realmName">练气一层</div><div class="xp" id="xpText">0 / 100 修为</div></div>
+    </div>
+    <div style="font-family:var(--brush);font-size:14px;color:var(--sub);margin:4px 0">西河派 · 神霄宫弟子</div>
+  </div>
+
+  <div class="stl">四科根基</div>
+  <div class="wx-row">
+    <div class="wx metal" title="金·408计算机"><span>⚔️</span><span class="wn">金·408</span></div>
+    <div class="wx water" title="水·301数学"><span>💧</span><span class="wn">水·301</span></div>
+    <div class="wx wood" title="木·201英语"><span>🌿</span><span class="wn">木·201</span></div>
+    <div class="wx fire" title="火·101政治"><span>🔥</span><span class="wn">火·101</span></div>
+  </div>
+  <div id="wxBars"></div>
+
+  <div class="stl">符箓宝库</div>
+  <div style="font-size:12px;color:var(--sub);margin-bottom:6px">已收集 <strong id="fuCount" style="color:var(--gold)">0</strong> 张符箓</div>
+  <div id="fuCollection" style="display:flex;flex-wrap:wrap;gap:4px"></div>
+
+  <div class="stl">修炼日志</div>
+  <div class="cd" id="logArea" style="font-size:12px;color:var(--sub);max-height:120px;overflow-y:auto">尚无修炼记录</div>
+</div>
+
+<!-- SCR2: 秘境 (Battle/Map) -->
+<div class="scr" id="s2">
+  <div class="stl">秘境探索 · 第<span id="floorNum">1</span>层</div>
+  <div class="cd" id="mapArea"></div>
+  <div id="battleArea" style="display:none">
+    <div class="enemy" id="enemyBox">
+      <div class="ename" id="eName">心魔</div>
+      <div class="ehp"><span style="font-size:10px;color:var(--sub)">HP </span><span id="eHPtxt">50/50</span></div>
+      <div class="ehpbar"><div class="ehpfill" id="eHPbar" style="width:100%"></div></div>
+      <div class="intent" id="eIntent">意图：⚔️ 攻击 8</div>
+    </div>
+    <div class="qi-bar" id="qiBar"></div>
+    <div class="hand" id="handArea"></div>
+    <div style="text-align:center;margin-top:6px">
+      <button class="btn btn-r" onclick="endTurn()">结束回合</button>
+    </div>
+  </div>
+  <div id="rewardBox" style="display:none"></div>
+</div>
+
+<!-- SCR3: 功法 (Deck/Skills) -->
+<div class="scr" id="s3">
+  <div class="stl">符箓牌组</div>
+  <div id="deckView" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center"></div>
+  <div class="stl">修炼统计</div>
+  <div class="cd">
+    <div style="font-size:13px"><span style="color:var(--sub)">总战斗:</span> <span id="stBattle">0</span></div>
+    <div style="font-size:13px"><span style="color:var(--sub)">总答题:</span> <span id="stAnswer">0</span></div>
+    <div style="font-size:13px"><span style="color:var(--sub)">正确率:</span> <span id="stRate">0%</span></div>
+    <div style="font-size:13px"><span style="color:var(--sub)">击杀心魔:</span> <span id="stKill">0</span></div>
+  </div>
+</div>
+</div>
+
+<!-- Bottom Nav -->
+<nav class="bnav" id="bnav" style="display:none">
+  <div class="ni on" data-s="1" onclick="goS(this)"><span class="ico">🏔️</span>洞府</div>
+  <div class="ni" data-s="2" onclick="goS(this)"><span class="ico">⚔️</span>秘境</div>
+  <div class="ni" data-s="3" onclick="goS(this)"><span class="ico">📜</span>功法</div>
+</nav>
+</div>
+
+<!-- Quiz Overlay -->
+<div class="quiz-overlay" id="quizOL">
+  <div class="quiz-box">
+    <div style="font-size:11px;color:var(--gold);margin-bottom:6px;font-family:var(--brush)" id="quizTitle">验道</div>
+    <div class="qq" id="quizQ"></div>
+    <div id="quizOpts"></div>
+    <div id="quizExpl" style="display:none;margin-top:8px;padding:8px;background:rgba(212,168,67,.05);border-radius:6px;font-size:12px;line-height:1.6"></div>
+  </div>
+</div>
+
+<script>
+// ===== CONFIG =====
+const ACCT='zmqawqw1314',PWD='zmq5201314';
+const GK='AIzaSyCxeteFi9QNGoSnZHffsGCKUWykfv-dabc';
+const OK='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';
+
+// ===== CULTIVATION SYSTEM =====
+const REALMS=['练气一层','练气二层','练气三层','练气四层','练气五层','练气六层','练气七层','练气八层','练气九层','筑基初期','筑基中期','筑基后期','金丹初期','金丹中期','金丹后期','元婴初期','元婴中期','元婴后期','化神期','合体期','大乘期','飞升·北大录取'];
+const REALM_XP=[100,150,200,300,400,500,600,800,1000,1500,2000,2500,3000,4000,5000,6000,8000,10000,15000,20000,30000,99999];
+
+// ===== TALISMAN (符箓) DATABASE =====
+const BASE_DECK=[
+  {id:'slash',name:'金光斩',icon:'⚔️',type:'atk',cost:1,dmg:6,desc:'造成6点伤害',sub:'408'},
+  {id:'slash2',name:'金光斩',icon:'⚔️',type:'atk',cost:1,dmg:6,desc:'造成6点伤害',sub:'408'},
+  {id:'shield',name:'护体符',icon:'🛡️',type:'def',cost:1,def:5,desc:'获得5点护盾',sub:'301'},
+  {id:'shield2',name:'护体符',icon:'🛡️',type:'def',cost:1,def:5,desc:'获得5点护盾',sub:'301'},
+  {id:'strike',name:'神霄雷',icon:'⚡',type:'atk',cost:1,dmg:8,desc:'雷法攻击8点',sub:'dao'},
+  {id:'heal',name:'回春诀',icon:'💚',type:'spc',cost:1,heal:4,desc:'回复4点气血',sub:'201'},
+  {id:'ward',name:'镇邪符',icon:'📿',type:'def',cost:1,def:4,dmg:3,desc:'4护盾+3伤害',sub:'101'},
+];
+const REWARD_POOL=[
+  {id:'r1',name:'天罡剑气',icon:'🗡️',type:'atk',cost:2,dmg:14,desc:'斩！14点伤害',sub:'408'},
+  {id:'r2',name:'五雷正法',icon:'⛈️',type:'atk',cost:2,dmg:12,desc:'神霄五雷，12伤害',sub:'dao'},
+  {id:'r3',name:'金钟罩',icon:'🔔',type:'def',cost:2,def:12,desc:'12点坚固护盾',sub:'301'},
+  {id:'r4',name:'太上老君符',icon:'☯️',type:'spc',cost:0,dmg:3,def:3,desc:'3伤害+3护盾',sub:'dao'},
+  {id:'r5',name:'大漠算经',icon:'📐',type:'atk',cost:1,dmg:9,desc:'算力化剑，9伤害',sub:'301'},
+  {id:'r6',name:'译经术',icon:'📖',type:'spc',cost:1,heal:6,desc:'回复6点气血',sub:'201'},
+  {id:'r7',name:'朝堂心法',icon:'🏛️',type:'def',cost:1,def:8,desc:'8点护盾',sub:'101'},
+  {id:'r8',name:'天网结阵',icon:'🕸️',type:'atk',cost:1,dmg:7,weak:1,desc:'7伤害+弱点',sub:'408'},
+  {id:'r9',name:'三清符令',icon:'🌟',type:'atk',cost:3,dmg:24,desc:'三清降世！24伤害',sub:'dao'},
+  {id:'r10',name:'符箓连环',icon:'🔗',type:'spc',cost:0,draw:2,desc:'抽2张符箓',sub:'dao'},
+  {id:'r11',name:'万法归宗',icon:'💫',type:'spc',cost:2,dmg:8,def:8,desc:'8伤害+8护盾',sub:'dao'},
+  {id:'r12',name:'Cache命中',icon:'💾',type:'atk',cost:1,dmg:10,desc:'精准打击10伤害',sub:'408'},
+];
+
+// ===== ENEMY DATABASE =====
+const ENEMIES_BY_FLOOR={
+  1:[{name:'数组迷障',hp:28,atk:6,sub:'408'},{name:'链表纠缠',hp:32,atk:7,sub:'408'},{name:'栈溢之妖',hp:25,atk:8,sub:'408'}],
+  2:[{name:'微积分蛇妖',hp:35,atk:8,sub:'301'},{name:'极限幻象',hp:30,atk:9,sub:'301'},{name:'级数之惑',hp:38,atk:7,sub:'301'}],
+  3:[{name:'阅读理解魔',hp:30,atk:7,sub:'201'},{name:'翻译鬼',hp:28,atk:8,sub:'201'},{name:'完形填空妖',hp:32,atk:6,sub:'201'}],
+  4:[{name:'马原幻阵',hp:34,atk:8,sub:'101'},{name:'毛概迷雾',hp:30,atk:9,sub:'101'},{name:'史纲之惑',hp:36,atk:7,sub:'101'}],
+  5:[{name:'内心之魔',hp:40,atk:10,sub:'dao'},{name:'心猿意马',hp:35,atk:11,sub:'dao'}],
+};
+const BOSSES={
+  1:{name:'💀 B+树魔王',hp:65,atk:12,sub:'408',boss:true},
+  2:{name:'💀 行列式领主',hp:70,atk:11,sub:'301',boss:true},
+  3:{name:'💀 长难句巨龙',hp:60,atk:13,sub:'201',boss:true},
+  4:{name:'💀 时政风暴王',hp:70,atk:12,sub:'101',boss:true},
+  5:{name:'💀 天劫·北大守门人',hp:100,atk:15,sub:'dao',boss:true},
+};
+
+const SUB_MAP={'408':'计算机','301':'数学','201':'英语','101':'政治','dao':'道法'};
+const SUB_PROMPTS={
+  '408':'考研408计算机(数据结构/组成原理/操作系统/计算机网络)',
+  '301':'考研301数学一(高数/线代/概率论)',
+  '201':'考研201英语一(阅读/翻译/写作)',
+  '101':'考研101政治(马原/毛概/史纲/思修)',
+  'dao':'道教知识(符箓/神霄派/雷法/内丹/易学/道德经/清静经/黄庭经/步罡踏斗/西河派传承)',
+};
+
+// ===== GAME STATE =====
+let G={hp:80,maxHp:80,def:0,qi:3,maxQi:3,gold:0,xp:0,realm:0,floor:1,node:0,
+  deck:[...BASE_DECK],hand:[],draw:[],discard:[],
+  enemy:null,inBattle:false,
+  mapNodes:[],mapDone:[],
+  stats:{battles:0,answers:0,correct:0,kills:0},
+  log:[]};
+
+function save(){localStorage.setItem('xiuxian_save',JSON.stringify(G))}
+function load(){const s=localStorage.getItem('xiuxian_save');if(s){try{G=JSON.parse(s)}catch(e){}}}
+
+// ===== LOGIN =====
+function doLogin(){const u=$('lu').value.trim(),p=$('lp').value.trim();if(u===ACCT&&p===PWD){localStorage.setItem('xx_auth','1');showApp()}else{$('lerr').textContent='道号或口令错误'}}
+function showApp(){$('loginP').classList.add('hide');$('appMain').style.display='';$('bnav').style.display='';load();updateUI();genMap()}
+if(localStorage.getItem('xx_auth')==='1')showApp();
+function $(id){return document.getElementById(id)}
+
+// ===== NAV =====
+function goS(el){document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.scr').forEach(x=>x.classList.remove('on'));el.classList.add('on');$('s'+el.dataset.s).classList.add('on');if(el.dataset.s==='3')renderDeck()}
+
+// ===== UI UPDATE =====
+function updateUI(){
+  const r=REALMS[G.realm]||REALMS[0];
+  $('hRealm').textContent=r;$('realmName').textContent=r;
+  $('hHP').textContent=G.hp;$('hDef').textContent=G.def;$('hQi').textContent=G.qi;
+  $('hHPbar').style.width=(G.hp/G.maxHp*100)+'%';
+  $('hGold').textContent=G.gold;$('hFloor').textContent=G.floor;
+  $('floorNum').textContent=G.floor;
+  const xpNeed=REALM_XP[G.realm]||100;
+  $('xpText').textContent=`${G.xp} / ${xpNeed} 修为`;
+  $('cultCircle').setAttribute('stroke-dashoffset',452-(G.xp/xpNeed*452));
+  // WX bars
+  const wxData=[['金·408','#c0c0c0','408'],['水·301','#4488cc','301'],['木·201','#2ecc71','201'],['火·101','#e74c3c','101']];
+  const prog=JSON.parse(localStorage.getItem('wxProg')||'{}');
+  $('wxBars').innerHTML=wxData.map(([n,c,s])=>`<div style="display:flex;align-items:center;gap:6px;font-size:11px;margin:2px 0"><span style="color:${c};width:50px">${n}</span><div class="pbar" style="flex:1"><div class="pf" style="width:${prog[s]||0}%;background:${c}"></div></div><span style="color:var(--sub);width:24px;text-align:right">${prog[s]||0}%</span></div>`).join('');
+  $('fuCount').textContent=G.deck.length;
+  // Stats
+  $('stBattle').textContent=G.stats.battles;$('stAnswer').textContent=G.stats.answers;
+  $('stRate').textContent=G.stats.answers?Math.round(G.stats.correct/G.stats.answers*100)+'%':'0%';
+  $('stKill').textContent=G.stats.kills;
+  // Log
+  $('logArea').innerHTML=G.log.slice(-8).reverse().map(l=>`<div style="margin:2px 0">${l}</div>`).join('')||'尚无修炼记录';
+  // Check realm up
+  if(G.xp>=REALM_XP[G.realm]&&G.realm<REALMS.length-1){G.xp-=REALM_XP[G.realm];G.realm++;G.maxHp+=10;G.hp=G.maxHp;G.maxQi=Math.min(5,3+Math.floor(G.realm/3));addLog(`✨ 突破！晋升【${REALMS[G.realm]}】`);updateUI()}
+  save();
+}
+
+function addLog(t){G.log.push(`[${new Date().toLocaleTimeString()}] ${t}`);if(G.log.length>50)G.log.shift()}
+function addWxProg(sub,v){const p=JSON.parse(localStorage.getItem('wxProg')||'{}');p[sub]=Math.min(100,(p[sub]||0)+v);localStorage.setItem('wxProg',JSON.stringify(p))}
+
+// ===== MAP GENERATION =====
+function genMap(){
+  const nodes=[];const total=7;
+  for(let i=0;i<total;i++){
+    if(i===total-1){nodes.push({type:'boss',icon:'💀',done:false})}
+    else if(i===3){nodes.push({type:'rest',icon:'🏕️',done:false})}
+    else{
+      const r=Math.random();
+      if(r<0.6)nodes.push({type:'fight',icon:'⚔️',done:false});
+      else if(r<0.8)nodes.push({type:'elite',icon:'👹',done:false});
+      else nodes.push({type:'event',icon:'❓',done:false});
+    }
+  }
+  G.mapNodes=nodes;G.node=0;renderMap();save();
+}
+
+function renderMap(){
+  let h='<div style="text-align:center;font-size:11px;color:var(--sub);margin-bottom:6px">第'+G.floor+'层秘境</div><div class="map-row">';
+  G.mapNodes.forEach((n,i)=>{
+    const cls=i===G.node?'current':n.done?'done':'';
+    const click=i===G.node&&!n.done?`onclick="enterNode(${i})"`:'' ;
+    h+=`<div class="map-node ${cls}" ${click}>${n.icon}</div>`;
+    if(i<G.mapNodes.length-1)h+='<span style="color:var(--dim)">─</span>';
+  });
+  h+='</div>';
+  $('mapArea').innerHTML=h;
+}
+
+// ===== NODE ENTRY =====
+function enterNode(i){
+  const n=G.mapNodes[i];
+  if(n.type==='fight'||n.type==='elite'){startBattle(n.type==='elite')}
+  else if(n.type==='boss'){startBattle(false,true)}
+  else if(n.type==='rest'){G.hp=Math.min(G.maxHp,G.hp+Math.floor(G.maxHp*0.3));addLog('🏕️ 调息恢复气血');n.done=true;G.node++;renderMap();updateUI()}
+  else if(n.type==='event'){randomEvent();n.done=true;G.node++;renderMap();updateUI()}
+}
+
+function randomEvent(){
+  const r=Math.random();
+  if(r<0.4){const g=10+Math.floor(Math.random()*20);G.gold+=g;addLog(`❓ 发现灵石矿脉，获得${g}灵石`)}
+  else if(r<0.7){G.xp+=15;addLog('❓ 偶得前辈遗留道韵，修为+15')}
+  else{G.hp=Math.min(G.maxHp,G.hp+10);addLog('❓ 发现灵泉，气血恢复10')}
+}
+
+// ===== BATTLE SYSTEM =====
+function startBattle(elite=false,boss=false){
+  G.inBattle=true;G.def=0;G.qi=G.maxQi;
+  const fl=((G.floor-1)%5)+1;
+  if(boss){G.enemy={...BOSSES[fl]}}
+  else{
+    const pool=ENEMIES_BY_FLOOR[fl]||ENEMIES_BY_FLOOR[1];
+    const e=pool[Math.floor(Math.random()*pool.length)];
+    G.enemy={...e};
+    if(elite){G.enemy.name='👹 '+G.enemy.name;G.enemy.hp=Math.floor(G.enemy.hp*1.5);G.enemy.atk+=3}
+  }
+  G.enemy.maxHp=G.enemy.hp;
+  G.draw=[...G.deck].sort(()=>Math.random()-.5);
+  G.hand=[];G.discard=[];
+  G.stats.battles++;
+  $('battleArea').style.display='';$('mapArea').style.display='none';$('rewardBox').style.display='none';
+  drawCards(5);renderBattle();updateUI();
+}
+
+function drawCards(n){
+  for(let i=0;i<n;i++){
+    if(G.draw.length===0){G.draw=[...G.discard].sort(()=>Math.random()-.5);G.discard=[]}
+    if(G.draw.length>0)G.hand.push(G.draw.pop());
+  }
+}
+
+function renderBattle(){
+  $('eName').textContent=G.enemy.name;
+  $('eHPtxt').textContent=G.enemy.hp+'/'+G.enemy.maxHp;
+  $('eHPbar').style.width=(G.enemy.hp/G.enemy.maxHp*100)+'%';
+  $('eIntent').textContent=`意图：⚔️ 攻击 ${G.enemy.atk}`;
+  $('qiBar').innerHTML=Array.from({length:G.maxQi},(_,i)=>`<div class="qi-orb${i<G.qi?' full':''}"></div>`).join('');
+  $('handArea').innerHTML=G.hand.map((c,i)=>`<div class="fu ${c.type}" onclick="playCard(${i})"><div style="font-size:9px;color:var(--cyan)">${c.cost}⚡</div><div class="ficon">${c.icon}</div><div class="fname">${c.name}</div><div class="fdesc">${c.desc}</div></div>`).join('');
+}
+
+// ===== PLAY CARD (triggers quiz) =====
+let pendingCard=null;
+function playCard(i){
+  const c=G.hand[i];
+  if(G.qi<c.cost)return;
+  pendingCard={card:c,index:i};
+  showQuiz(c.sub||'408');
+}
+
+async function showQuiz(sub){
+  $('quizOL').classList.add('show');$('quizTitle').textContent=`验道 · ${SUB_MAP[sub]||sub}`;
+  $('quizQ').innerHTML='<span class="spin"></span> 出题中...';$('quizOpts').innerHTML='';$('quizExpl').style.display='none';
+  try{
+    const p=`你是${SUB_PROMPTS[sub]}出题专家。出1道选择题。严格JSON格式输出（不要多余文字）：{"q":"题目","A":"","B":"","C":"","D":"","answer":"A","explain":"简短解析"}`;
+    const r=await gem(p,0.9);
+    let t=r.replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
+    const q=JSON.parse(t);
+    $('quizQ').textContent=q.q;
+    $('quizOpts').innerHTML=['A','B','C','D'].filter(k=>q[k]).map(k=>`<div class="qo" onclick="answerQuiz('${k}','${q.answer}',this)">${k}. ${q[k]}</div>`).join('');
+    window._qExpl=q.explain;window._qAns=q.answer;window._qSub=sub;
+  }catch(e){$('quizQ').textContent='出题失败，自动通过';setTimeout(()=>{resolveCard(true)},800)}
+}
+
+function answerQuiz(pick,ans,el){
+  G.stats.answers++;
+  const correct=pick===ans;
+  if(correct){G.stats.correct++;el.classList.add('right');addWxProg(window._qSub,1)}
+  else{el.classList.add('wrong');document.querySelectorAll('.qo').forEach(o=>{if(o.textContent.startsWith(ans))o.classList.add('right')})}
+  $('quizExpl').style.display='';$('quizExpl').textContent=(correct?'✅ 正确！':'❌ 错了！答案：'+ans)+'\n'+window._qExpl;
+  setTimeout(()=>{$('quizOL').classList.remove('show');resolveCard(correct)},correct?1000:2000);
+}
+
+function resolveCard(success){
+  if(!pendingCard)return;
+  const c=pendingCard.card;const i=pendingCard.index;
+  G.qi-=c.cost;G.hand.splice(i,1);G.discard.push(c);
+  if(success){
+    if(c.dmg)G.enemy.hp=Math.max(0,G.enemy.hp-c.dmg);
+    if(c.def)G.def+=c.def;
+    if(c.heal)G.hp=Math.min(G.maxHp,G.hp+c.heal);
+    if(c.draw)drawCards(c.draw);
+    if(c.weak)G.enemy.atk=Math.max(1,G.enemy.atk-c.weak);
+    G.xp+=3;
+  }else{G.hp=Math.max(0,G.hp-3);addLog(`❌ 答错，反噬3点气血`)}
+  pendingCard=null;
+  if(G.enemy.hp<=0){winBattle();return}
+  if(G.hp<=0){loseBattle();return}
+  renderBattle();updateUI();
+}
+
+function endTurn(){
+  // Enemy attacks
+  let dmg=G.enemy.atk;
+  if(G.def>=dmg){G.def-=dmg;dmg=0}else{dmg-=G.def;G.def=0;G.hp=Math.max(0,G.hp-dmg)}
+  addLog(`💀 ${G.enemy.name} 攻击，造成${G.enemy.atk}伤害`);
+  if(G.hp<=0){loseBattle();return}
+  // New turn
+  G.discard.push(...G.hand);G.hand=[];G.qi=G.maxQi;G.def=0;
+  drawCards(5);renderBattle();updateUI();
+}
+
+function winBattle(){
+  G.inBattle=false;G.stats.kills++;
+  const xpGain=G.enemy.boss?30:10;const goldGain=G.enemy.boss?25:8+Math.floor(Math.random()*10);
+  G.xp+=xpGain;G.gold+=goldGain;
+  addLog(`⚔️ 击败【${G.enemy.name}】修为+${xpGain} 灵石+${goldGain}`);
+  G.mapNodes[G.node].done=true;G.node++;
+  // Reward: pick a new card
+  const rewards=[];for(let i=0;i<3;i++){rewards.push(REWARD_POOL[Math.floor(Math.random()*REWARD_POOL.length)])}
+  $('battleArea').style.display='none';
+  $('rewardBox').style.display='';
+  $('rewardBox').innerHTML=`<div class="cd" style="text-align:center"><div style="font-family:var(--brush);font-size:18px;color:var(--gold);margin-bottom:8px">⚔️ 胜利！选择一张符箓</div>
+  <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">${rewards.map((c,i)=>`<div class="fu ${c.type}" onclick="pickReward(${i})" style="width:90px;min-height:110px"><div style="font-size:9px;color:var(--cyan)">${c.cost}⚡</div><div class="ficon">${c.icon}</div><div class="fname">${c.name}</div><div class="fdesc">${c.desc}</div></div>`).join('')}</div>
+  <button class="btn" onclick="skipReward()" style="margin-top:8px;font-size:11px">跳过</button></div>`;
+  window._rewards=rewards;
+  // Check if floor complete
+  if(G.node>=G.mapNodes.length){addLog(`🏔️ 第${G.floor}层秘境通关！`);G.floor++;genMap()}
+  else{renderMap()}
+  updateUI();
+}
+
+function pickReward(i){const c={...window._rewards[i],id:'r_'+Date.now()};G.deck.push(c);addLog(`📜 获得符箓【${c.name}】`);$('rewardBox').style.display='none';$('mapArea').style.display='';renderMap();updateUI()}
+function skipReward(){$('rewardBox').style.display='none';$('mapArea').style.display='';renderMap();updateUI()}
+
+function loseBattle(){
+  G.inBattle=false;addLog('💀 陨落...重回秘境第一层');
+  G.hp=G.maxHp;G.def=0;G.floor=Math.max(1,G.floor);G.node=0;G.deck=[...BASE_DECK];
+  $('battleArea').style.display='none';$('mapArea').style.display='';genMap();updateUI();
+  alert('道心破碎！修为归零，重头修炼。');
+}
+
+// ===== DECK VIEW =====
+function renderDeck(){
+  $('deckView').innerHTML=G.deck.map(c=>`<div class="fu ${c.type}" style="width:80px;min-height:100px"><div style="font-size:9px;color:var(--cyan)">${c.cost}⚡</div><div class="ficon">${c.icon}</div><div class="fname">${c.name}</div><div class="fdesc">${c.desc}</div></div>`).join('');
+}
+
+// ===== API =====
+async function gem(prompt,temp=0.7){
+  const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GK}`,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:temp,maxOutputTokens:2048}})
+  });const d=await r.json();return d.candidates?.[0]?.content?.parts?.[0]?.text||'[失败]';
+}
+</script>
+</body>
+</html>

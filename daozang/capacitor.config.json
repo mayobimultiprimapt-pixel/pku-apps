@@ -1,0 +1,7 @@
+{
+  "appId": "com.shenxiao.daozang",
+  "appName": "神霄道藏",
+  "webDir": "www",
+  "server": {"androidScheme": "https"},
+  "android": {"allowMixedContent": true}
+}
