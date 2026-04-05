@@ -134,7 +134,6 @@ button{font-family:var(--font)}
   <h1>神霄修仙录</h1>
   <div class="sub">西河派 · 神霄宫</div>
   <input type="text" id="lu" placeholder="道号" autocomplete="off">
-  <input type="password" id="lp" placeholder="口令">
   <button class="lbtn" onclick="doLogin()">入道</button>
   <div class="lerr" id="lerr"></div>
 </div>
@@ -301,7 +300,7 @@ function save(){localStorage.setItem('xiuxian_save',JSON.stringify(G))}
 function load(){const s=localStorage.getItem('xiuxian_save');if(s){try{G=JSON.parse(s)}catch(e){}}}
 
 // ===== LOGIN =====
-function doLogin(){const u=$('lu').value.trim(),p=$('lp').value.trim();if(u===ACCT&&p===PWD){localStorage.setItem('xx_auth','1');showApp()}else{$('lerr').textContent='道号或口令错误'}}
+function doLogin(){const u=$('lu').value.trim();if(u){localStorage.setItem('xx_auth','1');showApp()}else{$('lerr').textContent='请输入道号'}}
 function showApp(){$('loginP').classList.add('hide');$('appMain').style.display='';$('bnav').style.display='';load();updateUI();genMap()}
 if(localStorage.getItem('xx_auth')==='1')showApp();
 function $(id){return document.getElementById(id)}

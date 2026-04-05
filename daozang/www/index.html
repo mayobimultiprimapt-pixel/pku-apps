@@ -96,7 +96,6 @@ textarea:focus,input:focus{border-color:var(--gold)}
   <h1>☯️ 神霄道藏</h1>
   <div class="sub">西河派 · 神霄宫</div>
   <input type="text" id="lu" placeholder="道号">
-  <input type="password" id="lp" placeholder="口令">
   <button class="lbtn" onclick="doLogin()">入道</button>
   <div class="lerr" id="lerr"></div>
 </div>
@@ -207,7 +206,7 @@ const OK='sk-or-v1-8b3c837b3d49b391c8c68b15cc2212975234963a4d45cd2468b3e72a01807
 let lastContent='';
 
 // Login
-function doLogin(){const u=document.getElementById('lu').value.trim(),p=document.getElementById('lp').value.trim();if(u===ACCT&&p===PWD){localStorage.setItem('dz_auth','1');showApp()}else{document.getElementById('lerr').textContent='道号或口令错误'}}
+function doLogin(){const u=document.getElementById('lu').value.trim();if(u){localStorage.setItem('dz_auth','1');showApp()}else{document.getElementById('lerr').textContent='请输入道号'}}
 function showApp(){document.getElementById('loginP').classList.add('hide');document.getElementById('app').style.display='';document.getElementById('bnav').style.display='';loadProg();loadBM()}
 if(localStorage.getItem('dz_auth')==='1')showApp();
 
