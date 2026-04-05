@@ -510,26 +510,83 @@ body{font-family:var(--font-b);background:var(--bg);color:var(--text);min-height
 //  钥匙更新流程：修改 .env → 运行 python sync_keys.py → 刷新页面
 // ============================================================
 
-// ---- 从 api-keys.js 自动提取 Token ----
+// ---- 三层密钥自动降级系统 ----
+// 1️⃣ api-keys.js (本地 sync_keys.py 生成)
+// 2️⃣ localStorage (浏览器永久缓存，输入一次永不再问)
+// 3️⃣ 一次性输入面板 (首次使用时弹出)
 const _E = window.TIANJI_KEYS || {};
+const _LS = JSON.parse(localStorage.getItem('tianji_saved_keys') || '{}');
+
+function _resolve(envKeys, lsKey, fallback) {
+  for (const k of envKeys) { if (_E[k]) return _E[k]; }
+  if (_LS[lsKey]) return _LS[lsKey];
+  return fallback || '';
+}
+
 const KEYS = {
-  OR_KEY:     _E.OPENROUTER_API_KEY || _E.OR_API_KEY || _E.GLOBAL_KEY || '',
-  OR_URL:     (_E.OR_BASE_URL || _E.GLOBAL_URL || 'https://openrouter.ai/api/v1') + '/chat/completions',
-  MIRROR_KEY: _E.MIRROR_API_KEY || _E.INLAND_KEY || _E.OPENAI_API_KEY || '',
-  MIRROR_URL: (_E.MIRROR_BASE_URL || _E.INLAND_URL || _E.OPENAI_BASE_URL || 'https://api.gptsapi.net/v1') + '/chat/completions',
-  PPLX_KEY:   _E.PERPLEXITY_API_KEY || '',
-  PPLX_URL:   (_E.PERPLEXITY_BASE_URL || 'https://api.perplexity.ai') + '/chat/completions',
-  GEMINI_KEY: _E.GEMINI_API_KEY || '',
+  OR_KEY:     _resolve(['OPENROUTER_API_KEY','OR_API_KEY','GLOBAL_KEY'], 'or_key'),
+  OR_URL:     (_resolve(['OR_BASE_URL','GLOBAL_URL'], 'or_url', 'https://openrouter.ai/api/v1')) + '/chat/completions',
+  MIRROR_KEY: _resolve(['MIRROR_API_KEY','INLAND_KEY','OPENAI_API_KEY'], 'mirror_key'),
+  MIRROR_URL: (_resolve(['MIRROR_BASE_URL','INLAND_URL','OPENAI_BASE_URL'], 'mirror_url', 'https://api.gptsapi.net/v1')) + '/chat/completions',
+  PPLX_KEY:   _resolve(['PERPLEXITY_API_KEY'], 'pplx_key'),
+  PPLX_URL:   (_resolve(['PERPLEXITY_BASE_URL'], 'pplx_url', 'https://api.perplexity.ai')) + '/chat/completions',
+  GEMINI_KEY: _resolve(['GEMINI_API_KEY'], 'gemini_key'),
 };
 
 // ---- 启动校验 ----
 const _keyStatus = (k, name) => k ? `✅ ${name}(${k.slice(0,12)}...)` : `❌ ${name}(缺失)`;
-console.log('[天机阁] 🔑 Token自动提取完成:');
+const _src = Object.keys(_E).length > 0 ? 'api-keys.js' : Object.keys(_LS).length > 0 ? 'localStorage' : '无';
+console.log(`[天机阁] 🔑 密钥来源: ${_src}`);
 console.log('  ', _keyStatus(KEYS.OR_KEY, 'OpenRouter'));
 console.log('  ', _keyStatus(KEYS.MIRROR_KEY, '镜像通道'));
 console.log('  ', _keyStatus(KEYS.PPLX_KEY, 'Perplexity'));
 console.log('  ', _keyStatus(KEYS.GEMINI_KEY, 'Gemini'));
-if (!KEYS.OR_KEY && !KEYS.MIRROR_KEY) console.warn('[天机阁] ⚠️ 无任何AI通道密钥! 请运行: python sync_keys.py');
+
+// ---- 无密钥时弹出一次性设置面板 ----
+if (!KEYS.OR_KEY && !KEYS.MIRROR_KEY) {
+  document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.createElement('div');
+    overlay.id = 'keySetupOverlay';
+    overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:rgba(6,6,12,.95);display:flex;align-items:center;justify-content:center;';
+    overlay.innerHTML = `<div style="background:rgba(18,18,36,.95);border:1px solid rgba(255,215,0,.2);border-radius:16px;padding:30px;max-width:480px;width:90%;font-family:'Noto Sans SC',sans-serif">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:32px;margin-bottom:8px">🔑</div>
+        <div style="font-size:18px;font-weight:700;color:#ffd700">天机阁 · 密钥配置</div>
+        <div style="font-size:11px;color:#666680;margin-top:6px">输入一次，永久保存到浏览器<br>本地用户可运行 python sync_keys.py 自动提取</div>
+      </div>
+      <div style="display:grid;gap:12px">
+        <div>
+          <label style="font-size:11px;color:#08f7fe;display:block;margin-bottom:4px">OpenRouter API Key <span style="color:#666">(主力通道·必填)</span></label>
+          <input id="_k_or" style="width:100%;padding:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#e8e8f0;font-size:13px" placeholder="sk-or-v1-..." value="">
+        </div>
+        <div>
+          <label style="font-size:11px;color:#08f7fe;display:block;margin-bottom:4px">Perplexity API Key <span style="color:#666">(情报搜索·推荐)</span></label>
+          <input id="_k_pplx" style="width:100%;padding:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#e8e8f0;font-size:13px" placeholder="pplx-..." value="">
+        </div>
+        <div>
+          <label style="font-size:11px;color:#08f7fe;display:block;margin-bottom:4px">镜像通道 Key <span style="color:#666">(备用·可选)</span></label>
+          <input id="_k_mirror" style="width:100%;padding:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#e8e8f0;font-size:13px" placeholder="sk-..." value="">
+        </div>
+      </div>
+      <button id="_k_save" style="width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,#ffd700,#ff8c00);border:none;border-radius:10px;font-size:15px;font-weight:700;color:#0a0a14;cursor:pointer">🔐 保存密钥 · 永不再问</button>
+      <div style="font-size:10px;color:#666680;text-align:center;margin-top:10px">密钥仅存于您的浏览器本地，不上传任何服务器</div>
+    </div>`;
+    document.body.appendChild(overlay);
+    document.getElementById('_k_save').addEventListener('click', () => {
+      const saved = {};
+      const orKey = document.getElementById('_k_or').value.trim();
+      const pplxKey = document.getElementById('_k_pplx').value.trim();
+      const mirrorKey = document.getElementById('_k_mirror').value.trim();
+      if (orKey) { saved.or_key = orKey; KEYS.OR_KEY = orKey; }
+      if (pplxKey) { saved.pplx_key = pplxKey; KEYS.PPLX_KEY = pplxKey; }
+      if (mirrorKey) { saved.mirror_key = mirrorKey; KEYS.MIRROR_KEY = mirrorKey; }
+      localStorage.setItem('tianji_saved_keys', JSON.stringify(saved));
+      console.log('[天机阁] 🔐 密钥已永久保存到 localStorage');
+      overlay.remove();
+      location.reload(); // 重新加载以应用密钥
+    });
+  });
+}
 
 // ---- 全部可用模型库 ----
 const ALL_MODELS = {
