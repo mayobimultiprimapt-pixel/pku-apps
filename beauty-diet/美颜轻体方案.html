@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>美颜轻体 · 终极懒人变美变瘦方案 PPT</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans SC',sans-serif;background:#0a0a14;color:#f0e6f6;overflow-x:hidden}
+.slide{min-height:100vh;padding:60px 40px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;page-break-after:always}
+@media print{.slide{height:100vh;min-height:auto;padding:40px 30px}}
+.slide::before{content:'';position:absolute;inset:0;opacity:0.15;pointer-events:none}
+
+/* Slide themes */
+.s-cover::before{background:radial-gradient(ellipse at 30% 40%,#e8527a,transparent 60%),radial-gradient(ellipse at 70% 70%,#a78bfa,transparent 50%)}
+.s-rose::before{background:radial-gradient(ellipse at 20% 30%,#e8527a,transparent 50%)}
+.s-violet::before{background:radial-gradient(ellipse at 80% 20%,#a78bfa,transparent 50%)}
+.s-mint::before{background:radial-gradient(ellipse at 50% 80%,#34d399,transparent 50%)}
+.s-gold::before{background:radial-gradient(ellipse at 30% 60%,#fbbf24,transparent 50%)}
+.s-blue::before{background:radial-gradient(ellipse at 70% 40%,#60a5fa,transparent 50%)}
+.s-peach::before{background:radial-gradient(ellipse at 40% 50%,#fb923c,transparent 50%)}
+.s-pink::before{background:radial-gradient(ellipse at 60% 30%,#f472b6,transparent 50%)}
+
+h1{font-size:clamp(32px,5vw,56px);font-weight:900;line-height:1.2;margin-bottom:16px}
+h2{font-size:clamp(24px,3.5vw,40px);font-weight:900;line-height:1.3;margin-bottom:24px}
+h3{font-size:clamp(18px,2.5vw,28px);font-weight:700;margin-bottom:16px}
+.subtitle{font-size:clamp(14px,2vw,20px);color:rgba(240,230,246,0.6);line-height:1.6}
+.accent{background:linear-gradient(135deg,#e8527a,#f4a26c,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tag{display:inline-block;padding:4px 16px;border-radius:20px;font-size:13px;font-weight:600;margin:4px}
+.tag-rose{background:rgba(232,82,122,0.15);color:#e8527a;border:1px solid rgba(232,82,122,0.3)}
+.tag-mint{background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.3)}
+.tag-violet{background:rgba(167,139,250,0.15);color:#a78bfa;border:1px solid rgba(167,139,250,0.3)}
+.tag-gold{background:rgba(251,191,36,0.15);color:#fbbf24;border:1px solid rgba(251,191,36,0.3)}
+.tag-blue{background:rgba(96,165,250,0.15);color:#60a5fa;border:1px solid rgba(96,165,250,0.3)}
+.tag-peach{background:rgba(251,146,60,0.15);color:#fb923c;border:1px solid rgba(251,146,60,0.3)}
+
+.grid{display:grid;gap:20px}
+.grid-2{grid-template-columns:1fr 1fr}
+.grid-3{grid-template-columns:1fr 1fr 1fr}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:768px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px}
+.card-glow{box-shadow:0 0 30px rgba(232,82,122,0.1)}
+.card h3{margin-bottom:12px}
+
+.num{font-size:48px;font-weight:900;line-height:1}
+.num-rose{color:#e8527a}
+.num-mint{color:#34d399}
+.num-violet{color:#a78bfa}
+.num-gold{color:#fbbf24}
+
+.list{list-style:none;padding:0}
+.list li{padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:15px;line-height:1.7;display:flex;gap:10px;align-items:flex-start}
+.list li:last-child{border:none}
+
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:rgba(232,82,122,0.1);color:#e8527a;padding:12px 16px;text-align:left;font-weight:700;border-bottom:2px solid rgba(232,82,122,0.2)}
+td{padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.04)}
+tr:hover td{background:rgba(255,255,255,0.02)}
+
+.timeline{position:relative;padding-left:30px}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,#e8527a,#a78bfa,#34d399)}
+.timeline-item{position:relative;margin-bottom:24px}
+.timeline-item::before{content:'';position:absolute;left:-26px;top:6px;width:12px;height:12px;border-radius:50%;border:2px solid;background:#0a0a14}
+.t-rose::before{border-color:#e8527a}
+.t-mint::before{border-color:#34d399}
+.t-violet::before{border-color:#a78bfa}
+.t-gold::before{border-color:#fbbf24}
+.t-blue::before{border-color:#60a5fa}
+
+.page-num{position:absolute;bottom:20px;right:30px;font-size:12px;color:rgba(255,255,255,0.2)}
+.slide-tag{position:absolute;top:30px;right:30px;font-size:11px;padding:4px 12px;border-radius:8px;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.3)}
+.divider{height:2px;background:linear-gradient(90deg,transparent,rgba(232,82,122,0.3),transparent);margin:24px 0}
+.spacer{height:24px}
+
+.flow-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0}
+.flow-box{padding:12px 20px;border-radius:12px;font-size:14px;font-weight:600;text-align:center}
+.flow-arrow{font-size:20px;color:rgba(255,255,255,0.3)}
+
+.big-icon{font-size:40px;margin-bottom:12px}
+.highlight-box{background:linear-gradient(135deg,rgba(232,82,122,0.12),rgba(167,139,250,0.08));border:1px solid rgba(232,82,122,0.2);border-radius:16px;padding:24px;margin:16px 0}
+/* ===== ANIMATIONS ===== */
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeLeft{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:translateX(0)}}
+@keyframes fadeRight{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes countUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+.anim{opacity:0;transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}
+.anim.show{opacity:1}
+.anim.up.show{animation:fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards}
+.anim.left.show{animation:fadeLeft 0.8s cubic-bezier(0.16,1,0.3,1) forwards}
+.anim.right.show{animation:fadeRight 0.8s cubic-bezier(0.16,1,0.3,1) forwards}
+.anim.pop.show{animation:scaleIn 0.6s cubic-bezier(0.16,1,0.3,1) forwards}
+.d1{animation-delay:.1s!important}.d2{animation-delay:.2s!important}.d3{animation-delay:.3s!important}
+.d4{animation-delay:.4s!important}.d5{animation-delay:.5s!important}.d6{animation-delay:.6s!important}
+
+/* Floating nav */
+.slide-nav{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:999;display:flex;flex-direction:column;gap:8px}
+.slide-nav a{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.1);transition:all 0.3s;text-decoration:none}
+.slide-nav a:hover,.slide-nav a.active{background:#e8527a;transform:scale(1.4);box-shadow:0 0 10px rgba(232,82,122,0.5)}
+.slide-nav .nav-label{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:11px;color:rgba(255,255,255,0.7);background:rgba(10,10,20,0.9);padding:4px 10px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
+.slide-nav a:hover .nav-label{opacity:1}
+
+/* Cover particles */
+.particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.particle{position:absolute;border-radius:50%;opacity:0.3;animation:float 4s ease-in-out infinite}
+
+/* Animated progress bar */
+.progress-bar{height:8px;border-radius:4px;background:rgba(255,255,255,0.06);overflow:hidden;margin:8px 0}
+.progress-fill{height:100%;border-radius:4px;width:0;transition:width 1.5s cubic-bezier(0.16,1,0.3,1)}
+
+/* Animated number counter */
+.counter{display:inline-block}
+
+/* Glassmorphism card upgrade */
+.card-glass{background:rgba(255,255,255,0.04);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;transition:transform 0.3s,box-shadow 0.3s}
+.card-glass:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+
+/* Cover gradient animation */
+.cover-bg{background:linear-gradient(-45deg,#e8527a22,#a78bfa22,#34d39922,#fbbf2422);background-size:400% 400%;animation:gradientShift 8s ease infinite}
+
+@media print{.slide-nav{display:none}.anim{opacity:1!important}}
+</style>
+</head>
+<body>
+
+<!-- Floating Navigation -->
+<nav class="slide-nav" id="slideNav"></nav>
+
+<!-- ========== SLIDE 1: COVER ========== -->
+<div class="slide s-cover" style="text-align:center;justify-content:center">
+  <div style="font-size:80px;margin-bottom:24px">✨🌸</div>
+  <h1><span class="accent">美颜轻体</span> · 终极方案</h1>
+  <p class="subtitle" style="max-width:600px;margin:0 auto">懒人也能变美变瘦的科学定制系统<br>体积饮食法 × 211餐盘 × AI拍照识卡 × 瑶浴排毒</p>
+  <div style="margin-top:32px">
+    <span class="tag tag-rose">减脂不饿</span>
+    <span class="tag tag-mint">美容养颜</span>
+    <span class="tag tag-violet">AI智能</span>
+    <span class="tag tag-gold">瑶浴排毒</span>
+  </div>
+  <div style="margin-top:48px;font-size:13px;color:rgba(255,255,255,0.3)">2026年4月 · 个人定制版</div>
+  <div class="page-num">01</div>
+</div>
+
+<!-- ========== SLIDE 2: PAIN POINTS ========== -->
+<div class="slide s-rose">
+  <div class="slide-tag">痛点分析</div>
+  <h2>为什么你<span class="accent">减肥总失败</span>？</h2>
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="big-icon">😫</div>
+      <h3>传统方法的三大死穴</h3>
+      <ul class="list">
+        <li>❌ <div><b>节食挨饿</b> — 基础代谢下降，一恢复饮食就反弹更胖</div></li>
+        <li>❌ <div><b>无法坚持</b> — 食谱太复杂，上班族根本没时间准备</div></li>
+        <li>❌ <div><b>不知道吃了多少</b> — 凭感觉吃，实际热量远超想象</div></li>
+      </ul>
+    </div>
+    <div class="card card-glow">
+      <div class="big-icon">💡</div>
+      <h3>我们的解决方案</h3>
+      <ul class="list">
+        <li>✅ <div><b>吃饱也掉秤</b> — 体积饮食法，大体积低热量，胃撑满心不慌</div></li>
+        <li>✅ <div><b>一键外卖</b> — 食谱直接跳转美团/饿了么搜索下单</div></li>
+        <li>✅ <div><b>AI 拍照秒算</b> — 拍一张照片，Gemini AI 3秒告诉你吃了多少卡</div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="page-num">02</div>
+</div>
+
+<!-- ========== SLIDE 3: CORE METHOD ========== -->
+<div class="slide s-mint">
+  <div class="slide-tag">核心方法论</div>
+  <h2>躺瘦三大<span class="accent">核心引擎</span></h2>
+  <div class="grid grid-3">
+    <div class="card" style="text-align:center">
+      <div style="font-size:60px;margin-bottom:8px">🥗</div>
+      <h3 style="color:#34d399">体积饮食法</h3>
+      <p class="subtitle" style="font-size:13px">吃大体积、低热量密度的食物。胃部牵张受体发送"已饱"信号，但实际热量极低。300g西兰花才60kcal！</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:60px;margin-bottom:8px">🍽️</div>
+      <h3 style="color:#a78bfa">211餐盘法</h3>
+      <p class="subtitle" style="font-size:13px">每餐：½蔬菜 + ¼蛋白质 + ¼低GI主食。科学配比保证营养均衡，血糖稳定不囤脂。</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:60px;margin-bottom:8px">📸</div>
+      <h3 style="color:#e8527a">AI拍照识卡</h3>
+      <p class="subtitle" style="font-size:13px">拍照上传 → Gemini Vision AI 秒级识别食物 → 精准估算热量+三大营养素 → 给出美容减脂建议。</p>
+    </div>
+  </div>
+  <div class="highlight-box" style="text-align:center;margin-top:24px">
+    <div style="font-size:18px;font-weight:700">每日总热量目标</div>
+    <div style="display:flex;justify-content:center;gap:40px;margin-top:12px">
+      <div><span class="num num-rose">1200</span><div class="subtitle">减脂模式 kcal</div></div>
+      <div><span class="num num-mint">1600</span><div class="subtitle">维持模式 kcal</div></div>
+    </div>
+  </div>
+  <div class="page-num">03</div>
+</div>
+
+<!-- ========== SLIDE 4: DAILY MEAL PLAN ========== -->
+<div class="slide s-violet">
+  <div class="slide-tag">每日食谱</div>
+  <h2>一天四餐 · <span class="accent">吃饱也只有1200kcal</span></h2>
+  <table>
+    <tr><th>餐次</th><th>目标热量</th><th>核心策略</th><th>示例</th><th>饱腹感</th></tr>
+    <tr>
+      <td>🌅 <b>早餐</b></td><td>~330 kcal</td><td>高纤主食 + 蛋白质</td>
+      <td>蒸红薯200g + 水煮蛋×2</td><td>★★★★★ 4h+</td>
+    </tr>
+    <tr>
+      <td>☀️ <b>午餐</b></td><td>~400 kcal</td><td>211餐盘法</td>
+      <td>香煎鸡胸 + 大份西兰花 + 番茄蛋花汤 + 蒸南瓜</td><td>★★★★★ 5h+</td>
+    </tr>
+    <tr>
+      <td>🌙 <b>晚餐</b></td><td>~170 kcal</td><td>轻食大体积汤品</td>
+      <td>冬瓜虾仁汤 (冬瓜300g+虾100g)</td><td>★★★★ 至睡前</td>
+    </tr>
+    <tr>
+      <td>🍵 <b>加餐</b></td><td>~60 kcal</td><td>防饿防暴食</td>
+      <td>小番茄300g / 黄瓜1根 / 气泡水</td><td>★★★★</td>
+    </tr>
+  </table>
+  <div class="divider"></div>
+  <div style="display:flex;gap:20px;flex-wrap:wrap">
+    <div class="card" style="flex:1;min-width:200px;border-left:3px solid #34d399">
+      <h3 style="font-size:14px;color:#34d399">🔑 进食顺序</h3>
+      <p style="font-size:13px;color:rgba(255,255,255,0.6)">汤水 → 蛋白质 → 蔬菜 → 碳水<br>先蛋白后碳水，血糖稳定不囤脂</p>
+    </div>
+    <div class="card" style="flex:1;min-width:200px;border-left:3px solid #e8527a">
+      <h3 style="font-size:14px;color:#e8527a">⏰ 时间窗口</h3>
+      <p style="font-size:13px;color:rgba(255,255,255,0.6)">晚餐 18:00 前完成<br>睡前 4 小时绝对禁食</p>
+    </div>
+    <div class="card" style="flex:1;min-width:200px;border-left:3px solid #a78bfa">
+      <h3 style="font-size:14px;color:#a78bfa">💧 餐前仪式</h3>
+      <p style="font-size:13px;color:rgba(255,255,255,0.6)">餐前 20 分钟喝 300ml 温水<br>占据胃容量30%，自动少吃</p>
+    </div>
+  </div>
+  <div class="page-num">04</div>
+</div>
+
+<!-- ========== SLIDE 5: BEAUTY FOODS ========== -->
+<div class="slide s-pink">
+  <div class="slide-tag">美容饮食</div>
+  <h2>吃出<span class="accent">好皮肤</span>的超级食物</h2>
+  <div class="grid grid-2">
+    <div class="card">
+      <h3>💎 美白抗氧化 TOP5</h3>
+      <ul class="list">
+        <li>🫐 <div><b>蓝莓</b> — 花青素抗氧化之王，每日150g</div></li>
+        <li>🥝 <div><b>猕猴桃</b> — 维C密度最高水果，促进胶原合成</div></li>
+        <li>🐟 <div><b>三文鱼</b> — Omega-3抗炎嫩肤，每周2-3次</div></li>
+        <li>🥦 <div><b>西兰花</b> — 维C+萝卜硫素，双重美白</div></li>
+        <li>🥑 <div><b>牛油果</b> — 维E+好脂肪，滋润皮肤屏障</div></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🌿 养颜内调 TOP5</h3>
+      <ul class="list">
+        <li>🍠 <div><b>红枣+桂圆</b> — 补血养颜铁三角，气色红润</div></li>
+        <li>🥛 <div><b>豆浆</b> — 大豆异黄酮，调节内分泌</div></li>
+        <li>🍄 <div><b>银耳</b> — 植物胶原蛋白，平价燕窝</div></li>
+        <li>🫘 <div><b>薏米+红豆</b> — 祛湿消肿美白圣水</div></li>
+        <li>🍵 <div><b>绿茶</b> — 茶多酚抗糖化，防止皮肤变黄</div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="highlight-box">
+    <h3 style="text-align:center;font-size:16px">💡 胶原蛋白补充新认知 (2026)</h3>
+    <p style="font-size:13px;color:rgba(255,255,255,0.6);text-align:center;line-height:1.8">
+      直接吃猪蹄鸡爪效果有限（会被分解为氨基酸）。<br>
+      ✅ 正确方法：<b style="color:#e8527a">小分子胶原蛋白肽（<1000道尔顿）+ 维C 同服</b>，促进自身成纤维细胞产生胶原蛋白。<br>
+      同时做好 <b style="color:#fbbf24">防晒</b>（紫外线会加速胶原降解）。
+    </p>
+  </div>
+  <div class="page-num">05</div>
+</div>
+
+<!-- ========== SLIDE 6: YAO BATH ========== -->
+<div class="slide s-peach">
+  <div class="slide-tag">瑶浴排毒</div>
+  <h2>瑶浴包 <span class="accent">10次循环</span> 养生排毒</h2>
+  <p class="subtitle" style="margin-bottom:24px">5种功效 × 每种2次 = 10次一循环 · 隔1-2天泡一次 · 每次1包</p>
+  <div class="grid grid-3" style="grid-template-columns:repeat(5,1fr)">
+    <div class="card" style="text-align:center;border-top:3px solid #60a5fa">
+      <div style="font-size:32px">🌬️</div>
+      <h3 style="font-size:14px;color:#60a5fa">活络祛风</h3>
+      <p style="font-size:11px;color:rgba(255,255,255,0.5)">疏通经络<br>祛风寒湿邪<br>×2次</p>
+    </div>
+    <div class="card" style="text-align:center;border-top:3px solid #f472b6">
+      <div style="font-size:32px">💎</div>
+      <h3 style="font-size:14px;color:#f472b6">排汗养颜</h3>
+      <p style="font-size:11px;color:rgba(255,255,255,0.5)">排汗排毒<br>疏通毛孔<br>×2次</p>
+    </div>
+    <div class="card" style="text-align:center;border-top:3px solid #fb923c">
+      <div style="font-size:32px">🌸</div>
+      <h3 style="font-size:14px;color:#fb923c">妇健修复</h3>
+      <p style="font-size:11px;color:rgba(255,255,255,0.5)">暖宫护巢<br>调理月经<br>×2次</p>
+    </div>
+    <div class="card" style="text-align:center;border-top:3px solid #fbbf24">
+      <div style="font-size:32px">🔥</div>
+      <h3 style="font-size:14px;color:#fbbf24">温肾固元</h3>
+      <p style="font-size:11px;color:rgba(255,255,255,0.5)">温补肾阳<br>固本培元<br>×2次</p>
+    </div>
+    <div class="card" style="text-align:center;border-top:3px solid #34d399">
+      <div style="font-size:32px">🍃</div>
+      <h3 style="font-size:14px;color:#34d399">清肤保健</h3>
+      <p style="font-size:11px;color:rgba(255,255,255,0.5)">清热解毒<br>止痒养肤<br>×2次</p>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="grid grid-2">
+    <div class="card" style="border-left:3px solid #fb923c">
+      <h3 style="font-size:14px">🛁 泡浴参数</h3>
+      <ul class="list" style="font-size:13px">
+        <li>🌡️ <div>水温 38-43°C（因类型而异）</div></li>
+        <li>⏱️ <div>时长 20-35 分钟</div></li>
+        <li>💧 <div>水位不超过心脏</div></li>
+        <li>🥤 <div>泡后立即补水 500ml</div></li>
+      </ul>
+    </div>
+    <div class="card" style="border-left:3px solid #ef4444">
+      <h3 style="font-size:14px">⚠️ 注意事项</h3>
+      <ul class="list" style="font-size:13px">
+        <li>🚫 <div>饭后 1 小时再泡</div></li>
+        <li>🚫 <div>经期/孕期暂停</div></li>
+        <li>🚫 <div>心血管疾病者禁用</div></li>
+        <li>🚫 <div>皮肤破损处避开</div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="page-num">06</div>
+</div>
+
+<!-- ========== SLIDE 7: AI SYSTEM ========== -->
+<div class="slide s-violet">
+  <div class="slide-tag">AI 智能系统</div>
+  <h2>AI 拍照<span class="accent">识卡</span>系统架构</h2>
+  <div class="flow-row" style="justify-content:center;margin:24px 0">
+    <div class="flow-box tag-rose">📷 拍照/相册</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box tag-violet">🧠 Gemini Vision AI</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box tag-mint">📊 热量+营养分析</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box tag-gold">💡 美容减脂建议</div>
+  </div>
+  <div class="grid grid-2">
+    <div class="card">
+      <h3>📸 AI 分析输出</h3>
+      <ul class="list">
+        <li>🔸 <div>识别每种食物名称和估算份量</div></li>
+        <li>🔸 <div>精准计算总热量 + 蛋白质/脂肪/碳水</div></li>
+        <li>🔸 <div>三维评分：减脂分 / 美颜分 / 饱腹分</div></li>
+        <li>🔸 <div>美容角度建议（缺什么营养素）</div></li>
+        <li>🔸 <div>减脂角度建议（什么吃多了）</div></li>
+        <li>🔸 <div>更健康的替代方案</div></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🧠 AI 智能推荐</h3>
+      <ul class="list">
+        <li>✅ <div>根据今日已摄入营养，AI自动推荐下一餐</div></li>
+        <li>✅ <div>实时追踪每日热量进度条</div></li>
+        <li>✅ <div>自动识别营养缺口（如维C不足)</div></li>
+        <li>✅ <div>一键跳转美团/饿了么点替代餐</div></li>
+        <li>✅ <div>分析记录自动保存，每日复盘</div></li>
+        <li>✅ <div>超标预警（碳水/脂肪超标提醒）</div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="page-num">07</div>
+</div>
+
+<!-- ========== SLIDE 8: LAZY RULES ========== -->
+<div class="slide s-gold">
+  <div class="slide-tag">躺瘦法则</div>
+  <h2>躺瘦 <span class="accent">7 大黄金法则</span></h2>
+  <div class="timeline">
+    <div class="timeline-item t-blue">
+      <h3 style="font-size:16px">🥤 法则1：餐前20分钟喝300ml温水</h3>
+      <p class="subtitle" style="font-size:13px">占据胃容量30%，饥饿感立减。零成本，今天就能开始。</p>
+    </div>
+    <div class="timeline-item t-rose">
+      <h3 style="font-size:16px">🥗 法则2：进食顺序 — 汤→蛋白→菜→碳水</h3>
+      <p class="subtitle" style="font-size:13px">先蛋白质后碳水，血糖波动减少40%，胰岛素低=不囤脂。</p>
+    </div>
+    <div class="timeline-item t-violet">
+      <h3 style="font-size:16px">🍽️ 法则3：211餐盘法</h3>
+      <p class="subtitle" style="font-size:13px">½蔬菜 + ¼蛋白 + ¼低GI主食。视觉满足+营养均衡。</p>
+    </div>
+    <div class="timeline-item t-gold">
+      <h3 style="font-size:16px">🐢 法则4：每口咀嚼20次</h3>
+      <p class="subtitle" style="font-size:13px">20分钟吃完一餐。大脑需要20分钟才能接收到饱腹信号。</p>
+    </div>
+    <div class="timeline-item t-rose">
+      <h3 style="font-size:16px">⏰ 法则5：晚餐18:00前，睡前4h禁食</h3>
+      <p class="subtitle" style="font-size:13px">夜间血糖稳定，生长激素正常分泌=睡觉也在燃脂。</p>
+    </div>
+    <div class="timeline-item t-blue">
+      <h3 style="font-size:16px">💧 法则6：每天2000ml水</h3>
+      <p class="subtitle" style="font-size:13px">水参与所有代谢过程，脱水直接降低燃脂效率30%。</p>
+    </div>
+    <div class="timeline-item t-mint">
+      <h3 style="font-size:16px">😴 法则7：7-8小时优质睡眠</h3>
+      <p class="subtitle" style="font-size:13px">熬夜增加饥饿素→第二天暴食。充足睡眠=所有方案的基础。</p>
+    </div>
+  </div>
+  <div class="page-num">08</div>
+</div>
+
+<!-- ========== SLIDE 9: 30 DAY PLAN ========== -->
+<div class="slide s-blue">
+  <div class="slide-tag">30天计划</div>
+  <h2>30天 <span class="accent">变美变瘦</span> 执行路线</h2>
+  <div class="grid grid-3">
+    <div class="card" style="border-top:3px solid #60a5fa">
+      <span class="tag tag-blue" style="margin-bottom:12px">第1-10天 · 启动期</span>
+      <ul class="list" style="font-size:13px">
+        <li>🔸 <div>建立餐前喝水+进食顺序习惯</div></li>
+        <li>🔸 <div>每餐拍照用AI追踪热量</div></li>
+        <li>🔸 <div>开始瑶浴循环（活络祛风×2）</div></li>
+        <li>🔸 <div>戒含糖饮料和零食</div></li>
+        <li>🎯 <div><b>预期：掉1-2kg水分+适应期</b></div></li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid #a78bfa">
+      <span class="tag tag-violet" style="margin-bottom:12px">第11-20天 · 加速期</span>
+      <ul class="list" style="font-size:13px">
+        <li>🔸 <div>严格执行211餐盘+体积饮食</div></li>
+        <li>🔸 <div>加入16/8轻断食（可选）</div></li>
+        <li>🔸 <div>瑶浴推进（排汗养颜+妇健修复）</div></li>
+        <li>🔸 <div>小分子胶原蛋白肽+维C每日补充</div></li>
+        <li>🎯 <div><b>预期：再掉1.5-2.5kg脂肪</b></div></li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid #34d399">
+      <span class="tag tag-mint" style="margin-bottom:12px">第21-30天 · 巩固期</span>
+      <ul class="list" style="font-size:13px">
+        <li>🔸 <div>习惯已自然化，无需刻意控制</div></li>
+        <li>🔸 <div>瑶浴推进（温肾固元+清肤保健）</div></li>
+        <li>🔸 <div>AI复盘30天饮食数据趋势</div></li>
+        <li>🔸 <div>皮肤状态显著改善</div></li>
+        <li>🎯 <div><b>预期：总共掉3-5kg，皮肤通透</b></div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="highlight-box" style="text-align:center">
+    <div style="display:flex;justify-content:center;gap:60px;flex-wrap:wrap">
+      <div><span class="num num-rose">-5kg</span><div class="subtitle">30天目标体重</div></div>
+      <div><span class="num num-mint">+30%</span><div class="subtitle">皮肤光泽度</div></div>
+      <div><span class="num num-violet">10次</span><div class="subtitle">瑶浴完整循环</div></div>
+      <div><span class="num num-gold">0</span><div class="subtitle">挨饿次数</div></div>
+    </div>
+  </div>
+  <div class="page-num">09</div>
+</div>
+
+<!-- ========== SLIDE 10: APP FEATURES ========== -->
+<div class="slide s-rose">
+  <div class="slide-tag">APP 功能</div>
+  <h2>美颜轻体 <span class="accent">APP 五大模块</span></h2>
+  <div class="grid grid-3" style="grid-template-columns:repeat(5,1fr)">
+    <div class="card" style="text-align:center">
+      <div style="font-size:36px">🏠</div>
+      <h3 style="font-size:14px">每日食谱</h3>
+      <p style="font-size:11px;color:rgba(255,255,255,0.5)">AI生成<br>一键外卖<br>饱腹标记</p>
+    </div>
+    <div class="card" style="text-align:center;border:1px solid rgba(232,82,122,0.3)">
+      <div style="font-size:36px">📸</div>
+      <h3 style="font-size:14px;color:#e8527a">拍照识卡</h3>
+      <p style="font-size:11px;color:rgba(255,255,255,0.5)">Gemini AI<br>3秒出结果<br>下餐推荐</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:36px">🛁</div>
+      <h3 style="font-size:14px">瑶浴排毒</h3>
+      <p style="font-size:11px;color:rgba(255,255,255,0.5)">10包循环<br>智能排程<br>打卡追踪</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:36px">📊</div>
+      <h3 style="font-size:14px">变美攻略</h3>
+      <p style="font-size:11px;color:rgba(255,255,255,0.5)">8大方法<br>排名+评分<br>科学依据</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:36px">👤</div>
+      <h3 style="font-size:14px">个人中心</h3>
+      <p style="font-size:11px;color:rgba(255,255,255,0.5)">体重追踪<br>目标设定<br>数据管理</p>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div style="text-align:center;margin-top:16px">
+    <h3>🚀 立即体验</h3>
+    <p style="font-size:20px;font-weight:700;color:#e8527a;margin-top:8px">http://localhost:8866/</p>
+    <p class="subtitle" style="margin-top:8px">无需安装 · 手机电脑均可 · 数据本地存储</p>
+  </div>
+  <div class="page-num">10</div>
+</div>
+
+<!-- ========== SLIDE 11: SKINCARE SOP ========== -->
+<div class="slide s-pink">
+  <div class="slide-tag">护肤管家</div>
+  <h2>晨/晚<span class="accent">护肤SOP</span>流程</h2>
+  <div class="grid grid-2">
+    <div class="card" style="border-top:3px solid #fbbf24">
+      <h3 style="color:#fbbf24">🌅 晨间6步 (5分钟)</h3>
+      <ul class="list" style="font-size:13px">
+        <li>1️⃣ <div><b>氨基酸洁面</b> — 温水30秒打圈</div></li>
+        <li>2️⃣ <div><b>爽肤水</b> — 湿敷或拍打，分肤质推荐</div></li>
+        <li>3️⃣ <div><b>精华液</b> — 烟酰胺/VC/玻尿酸按需</div></li>
+        <li>4️⃣ <div><b>眼霜</b> — 无名指点涂按摩</div></li>
+        <li>5️⃣ <div><b>面霜/乳液</b> — 锁水屏障</div></li>
+        <li>6️⃣ <div><b style="color:#ef4444">防晒！</b> SPF50+ PA++++ 必涂</div></li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid #a78bfa">
+      <h3 style="color:#a78bfa">🌙 夜间7步 (10分钟)</h3>
+      <ul class="list" style="font-size:13px">
+        <li>1️⃣ <div><b>卸妆</b> — 油卸→水卸 双重清洁</div></li>
+        <li>2️⃣ <div><b>二次洁面</b> — 氨基酸洗面奶</div></li>
+        <li>3️⃣ <div><b>去角质</b> — 每周1-2次，敏感皮慎用</div></li>
+        <li>4️⃣ <div><b>爽肤水</b> — 补水打底</div></li>
+        <li>5️⃣ <div><b>夜间精华</b> — 可用A醇/果酸活性成分</div></li>
+        <li>6️⃣ <div><b>眼霜</b> — 抗皱紧致型</div></li>
+        <li>7️⃣ <div><b>晚霜/睡眠面膜</b> — 修复屏障</div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="highlight-box" style="text-align:center">
+    <p style="font-size:14px;font-weight:700">⚠️ 成分冲突预警</p>
+    <p style="font-size:12px;color:rgba(255,255,255,0.6)">A醇 ≠ VC 同时用 | 果酸后必须防晒 | 烟酰胺浓度建议≤5% | 新品先耳后试用</p>
+  </div>
+  <div class="page-num">11</div>
+</div>
+
+<!-- ========== SLIDE 12: BATH RECIPES ========== -->
+<div class="slide s-gold">
+  <div class="slide-tag">泡澡配方库</div>
+  <h2>8大功效 <span class="accent">泡澡/泡脚</span> 配方</h2>
+  <table>
+    <tr><th>功效</th><th>配方</th><th>水温</th><th>时长</th></tr>
+    <tr><td>🌬️ 排毒祛湿</td><td>艾草+生姜+花椒</td><td>40-42°C</td><td>20min</td></tr>
+    <tr><td>💎 美白嫩肤</td><td>牛奶+蜂蜜+玫瑰花瓣</td><td>38-40°C</td><td>15min</td></tr>
+    <tr><td>🔥 减脂燃脂</td><td>海盐+苏打粉+薄荷精油</td><td>40-42°C</td><td>25min</td></tr>
+    <tr><td>😴 安神助眠</td><td>薰衣草+洋甘菊</td><td>38-39°C</td><td>20min</td></tr>
+    <tr><td>💪 缓解疲劳</td><td>硫酸镁(泻盐)+桉树精油</td><td>40-42°C</td><td>20min</td></tr>
+    <tr><td>🌸 活血暖宫</td><td>红花+当归+益母草</td><td>40-43°C</td><td>25min</td></tr>
+    <tr><td>🦴 关节养护</td><td>艾叶+红花+伸筋草</td><td>42-45°C</td><td>30min</td></tr>
+    <tr><td>🍃 皮肤修复</td><td>燕麦+椰子油+茶树精油</td><td>37-39°C</td><td>15min</td></tr>
+  </table>
+  <div class="divider"></div>
+  <div class="grid grid-2">
+    <div class="card" style="border-left:3px solid #34d399">
+      <h3 style="font-size:14px;color:#34d399">🛁 泡澡SOP</h3>
+      <p style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.8">
+        泡前喝水300ml → 干刷身体3min → 温水冲洗 → 放入配料浸泡15-25min → 期间敷面膜 → 温水冲洗 → 趁湿涂身体乳 → 休息补水
+      </p>
+    </div>
+    <div class="card" style="border-left:3px solid #fb923c">
+      <h3 style="font-size:14px;color:#fb923c">🦶 泡脚方案 (无浴缸替代)</h3>
+      <p style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.8">
+        40-45°C水 + 配方包 → 泡15-20min → 搓涌泉穴100次 → 穿棉袜保温 → 配合足底穴位按摩 → 30分钟后上床助眠
+      </p>
+    </div>
+  </div>
+  <div class="page-num">12</div>
+</div>
+
+<!-- ========== SLIDE 13: 4D CHECK-IN ========== -->
+<div class="slide s-violet">
+  <div class="slide-tag">四维打卡</div>
+  <h2>每日<span class="accent">四维打卡</span>习惯养成</h2>
+  <div class="grid grid-4">
+    <div class="card" style="text-align:center;border-top:3px solid #e8527a">
+      <div style="font-size:40px;animation:float 3s ease-in-out infinite">🥗</div>
+      <h3 style="font-size:16px;color:#e8527a">瘦身</h3>
+      <p style="font-size:11px;color:rgba(255,255,255,0.5)">三餐拍照<br>热量追踪<br>进食顺序</p>
+    </div>
+    <div class="card" style="text-align:center;border-top:3px solid #f472b6">
+      <div style="font-size:40px;animation:float 3s ease-in-out infinite .5s">💎</div>
+      <h3 style="font-size:16px;color:#f472b6">护肤</h3>
+      <p style="font-size:11px;color:rgba(255,255,255,0.5)">晨/晚SOP<br>面膜日历<br>防晒打卡</p>
+    </div>
+    <div class="card" style="text-align:center;border-top:3px solid #fb923c">
+      <div style="font-size:40px;animation:float 3s ease-in-out infinite 1s">🛁</div>
+      <h3 style="font-size:16px;color:#fb923c">泡澡</h3>
+      <p style="font-size:11px;color:rgba(255,255,255,0.5)">配方选择<br>SOP引导<br>计时打卡</p>
+    </div>
+    <div class="card" style="text-align:center;border-top:3px solid #34d399">
+      <div style="font-size:40px;animation:float 3s ease-in-out infinite 1.5s">🌿</div>
+      <h3 style="font-size:16px;color:#34d399">养生</h3>
+      <p style="font-size:11px;color:rgba(255,255,255,0.5)">饮水2L<br>睡眠7h+<br>节气养生</p>
+    </div>
+  </div>
+  <div class="highlight-box">
+    <h3 style="text-align:center;font-size:16px">🏆 成就体系 — 游戏化激励</h3>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:12px">
+      <div class="tag tag-rose">素颜小白 Lv.1</div>
+      <div class="flow-arrow">→</div>
+      <div class="tag tag-peach">护肤达人 Lv.2</div>
+      <div class="flow-arrow">→</div>
+      <div class="tag tag-violet">养生博主 Lv.3</div>
+      <div class="flow-arrow">→</div>
+      <div class="tag tag-gold">冻龄女神 Lv.4</div>
+    </div>
+    <p style="font-size:12px;color:rgba(255,255,255,0.5);text-align:center;margin-top:12px">
+      连续21天打卡解锁习惯成就 | 66天解锁终极女神徽章 | 积分兑换护肤小样/泡澡包
+    </p>
+  </div>
+  <div class="page-num">13</div>
+</div>
+
+<!-- ========== SLIDE 14: CLOSING ========== -->
+<div class="slide s-cover" style="text-align:center">
+  <div style="font-size:80px;margin-bottom:24px">🌸✨🛁</div>
+  <h1>开始你的<span class="accent">躺瘦之旅</span></h1>
+  <p class="subtitle" style="max-width:500px;margin:16px auto">
+    不节食 · 不挨饿 · 不运动<br>
+    吃饱也能掉秤 · AI帮你算卡 · 瑶浴帮你排毒<br><br>
+    <b style="color:#e8527a;font-size:18px">美丽，从今天的每一餐开始 💕</b>
+  </p>
+  <div style="margin-top:40px;padding:20px;background:rgba(255,255,255,0.03);border-radius:16px;display:inline-block">
+    <div style="font-size:14px;color:rgba(255,255,255,0.4)">美颜轻体 · 2026 个人定制版</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.2);margin-top:4px">Powered by Gemini Vision AI × 体积饮食法 × 瑶浴养生</div>
+  </div>
+  <div class="page-num">14</div>
+</div>
+
+<script>
+// Build slide navigation
+const slides=document.querySelectorAll('.slide');
+const nav=document.getElementById('slideNav');
+const labels=['封面','痛点','方法论','食谱','美容','瑶浴','AI系统','躺瘦','30天','APP','护肤','泡澡配方','打卡','尾页'];
+slides.forEach((s,i)=>{
+  s.id='s'+(i+1);
+  const a=document.createElement('a');a.href='#s'+(i+1);
+  a.innerHTML=`<span class="nav-label">${labels[i]||''}</span>`;
+  a.style.position='relative';
+  nav.appendChild(a);
+});
+// Active nav on scroll
+const obs=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){
+    const i=[...slides].indexOf(e.target);
+    nav.querySelectorAll('a').forEach((a,j)=>a.classList.toggle('active',j===i));
+  }});
+},{threshold:0.4});
+slides.forEach(s=>obs.observe(s));
+
+// Scroll-triggered animations
+const animObs=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('show');animObs.unobserve(e.target)}});
+},{threshold:0.15});
+document.querySelectorAll('.anim').forEach(el=>animObs.observe(el));
+
+// Add anim classes to cards, h2, etc automatically
+document.querySelectorAll('.slide h2').forEach(el=>{el.classList.add('anim','up')});
+document.querySelectorAll('.card, .card-glass').forEach((el,i)=>{el.classList.add('anim','up','d'+(i%4+1))});
+document.querySelectorAll('.highlight-box').forEach(el=>{el.classList.add('anim','pop')});
+document.querySelectorAll('.timeline-item').forEach((el,i)=>{el.classList.add('anim','left','d'+(i%4+1))});
+document.querySelectorAll('.flow-box').forEach((el,i)=>{el.classList.add('anim','pop','d'+(i+1))});
+// Re-observe new anim elements
+document.querySelectorAll('.anim:not(.show)').forEach(el=>animObs.observe(el));
+
+// Particles on cover
+const cover=document.querySelector('.s-cover');
+if(cover){
+  const pDiv=document.createElement('div');pDiv.className='particles';
+  for(let i=0;i<20;i++){
+    const p=document.createElement('div');p.className='particle';
+    const s=Math.random()*6+3;
+    Object.assign(p.style,{
+      width:s+'px',height:s+'px',left:Math.random()*100+'%',top:Math.random()*100+'%',
+      background:['#e8527a','#a78bfa','#34d399','#fbbf24','#f472b6'][i%5],
+      animationDuration:(3+Math.random()*4)+'s',animationDelay:Math.random()*3+'s'
+    });
+    pDiv.appendChild(p);
+  }
+  cover.appendChild(pDiv);
+  cover.classList.add('cover-bg');
+}
+
+// Smooth scroll for nav
+nav.addEventListener('click',e=>{
+  const a=e.target.closest('a');if(!a)return;
+  e.preventDefault();document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'});
+});
+
+// Keyboard navigation
+document.addEventListener('keydown',e=>{
+  const active=nav.querySelector('.active');
+  const idx=active?[...nav.children].indexOf(active):0;
+  if(e.key==='ArrowDown'&&idx<slides.length-1){e.preventDefault();slides[idx+1].scrollIntoView({behavior:'smooth'})}
+  if(e.key==='ArrowUp'&&idx>0){e.preventDefault();slides[idx-1].scrollIntoView({behavior:'smooth'})}
+});
+
+console.log('💡 提示: Ctrl+P 导出为PDF | ↑↓ 键翻页 | 右侧圆点导航');
+</script>
+</body>
+</html>
